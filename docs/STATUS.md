@@ -16,6 +16,14 @@
   - [x] Ponto de entrada único `index.php` criado com constante `SYS_ENTRY` e fuso horário `America/Sao_Paulo`.
   - [x] Logotipo oficial copiado de `docs/logo_Crateus.png` para `assets/img/logo.png`.
   - [x] Log de contingência em arquivo `logs/system_error.log` inicializado.
+  - [x] Repositório Git local inicializado e ramo principal definido como `main`.
+  - [x] Arquivo `.gitignore` criado com regras para PHP, Apache, logs, dumps e OS.
+  - [x] Arquivo `.gitattributes` criado para padronização de quebras de linha e arquivos binários.
+  - [x] Arquivo `config/config.example.php` criado como modelo seguro sem segredos.
+  - [x] Verificação de segurança realizada (nenhum segredo ou log sensível rastreado).
+  - [x] Primeiro commit ("Estrutura inicial do projeto") realizado com sucesso.
+  - [x] Configuração do repositório remoto no GitHub / Push inicial preparado (aguardando criação do remote pelo usuário).
+
 
 - [ ] **Fase 2 - Banco de Dados, Persistência e Migrations**
   - [ ] Criar classe singleton PDO `app/models/Database.php`.
