@@ -1,8 +1,8 @@
 # Estado do Projeto - SisFrota Municipal
 
 **Última atualização:** 25/08/2026  
-**Fase Atual:** Fase 1 Concluída  
-**Próxima Fase:** Fase 2 - Banco de dados, Persistência e Migrations  
+**Fase Atual:** Fase 2 Concluída  
+**Próxima Fase:** Fase 3 - Autenticação, Sessão e Controle de Acesso (RBAC)  
 
 ---
 
@@ -22,15 +22,16 @@
   - [x] Arquivo `config/config.example.php` criado como modelo seguro sem segredos.
   - [x] Verificação de segurança realizada (nenhum segredo ou log sensível rastreado).
   - [x] Primeiro commit ("Estrutura inicial do projeto") realizado com sucesso.
-  - [x] Configuração do repositório remoto no GitHub / Push inicial preparado (aguardando criação do remote pelo usuário).
+  - [x] Configuração do repositório remoto no GitHub e sincronização realizada.
 
 
-- [ ] **Fase 2 - Banco de Dados, Persistência e Migrations**
-  - [ ] Criar classe singleton PDO `app/models/Database.php`.
-  - [ ] Criar executor CLI de migrations `database/migrate.php` protegido por `SYS_ENTRY`.
-  - [ ] Criar migration `001_create_system_tables.sql` (tabelas: `migrations`, `users`, `secretariats`, `vehicles`, `maintenance_categories`, `fuelings`, `maintenances`, `system_logs`).
-  - [ ] Criar migration `002_seed_initial_data.sql` (admin inicial, secretarias e categorias).
-  - [ ] Validar execução e idempotência do script CLI.
+- [x] **Fase 2 - Banco de Dados, Persistência e Migrations**
+  - [x] Criar classe singleton PDO `app/models/Database.php`.
+  - [x] Criar executor CLI de migrations `database/migrate.php` protegido por `SYS_ENTRY`.
+  - [x] Criar migration `001_create_system_tables.sql` (tabelas: `migrations`, `users`, `secretariats`, `vehicles`, `maintenance_categories`, `fuelings`, `maintenances`, `system_logs`).
+  - [x] Criar migration `002_seed_initial_data.sql` (admin inicial, secretarias e categorias).
+  - [x] Validar execução e idempotência do script CLI.
+
 
 - [ ] **Fase 3 - Autenticação, Sessão e Controle de Acesso (RBAC)**
   - [ ] Criar Model `User.php` e `AuthController.php`.
@@ -75,4 +76,4 @@
 
 ## Próximo Passo Recomendado
 
-Abrir um novo chat para iniciar a **Fase 2 - Banco de Dados, Persistência e Migrations**, criando a classe `Database.php`, a infraestrutura de migrations e a carga inicial de dados (seed) via CLI.
+Abrir um novo chat para iniciar a **Fase 3 - Autenticação, Sessão e Controle de Acesso (RBAC)**, criando o Model `User.php`, o `AuthController.php`, a View de Login (`login.php`) e os templates base do sistema (`header.php`, `sidebar.php`, `footer.php`).
