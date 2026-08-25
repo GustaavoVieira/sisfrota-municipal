@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gestão de Frota Municipal</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "on-secondary": "#ffffff",
+                "text-main": "#0f172a",
+                "surface-background": "#f8fafc",
+                "inverse-on-surface": "#f0f1f1",
+                "border-subtle": "#e2e8f0",
+                "surface-container-highest": "#e2e2e2",
+                "outline": "#6e7b6c",
+                "on-tertiary-container": "#fffbff",
+                "on-primary-fixed-variant": "#005320",
+                "surface-dim": "#dadada",
+                "primary-fixed-dim": "#62df7d",
+                "on-secondary-container": "#6f5900",
+                "text-muted": "#475569",
+                "tertiary-container": "#c74668",
+                "surface-container": "#eeeeee",
+                "on-error-container": "#93000a",
+                "surface-container-lowest": "#ffffff",
+                "background": "#f9f9f9",
+                "outline-variant": "#bdcaba",
+                "tertiary-fixed": "#ffd9de",
+                "primary-fixed": "#7ffc97",
+                "on-error": "#ffffff",
+                "error": "#ba1a1a",
+                "error-container": "#ffdad6",
+                "on-tertiary": "#ffffff",
+                "on-background": "#1a1c1c",
+                "on-tertiary-fixed-variant": "#8a143c",
+                "on-secondary-fixed-variant": "#574500",
+                "on-tertiary-fixed": "#3f0016",
+                "primary-container": "#00873a",
+                "secondary-container": "#fed01b",
+                "surface-container-high": "#e8e8e8",
+                "on-surface": "#1a1c1c",
+                "secondary-fixed": "#ffe083",
+                "tertiary-fixed-dim": "#ffb2bf",
+                "on-primary-fixed": "#002109",
+                "secondary": "#735c00",
+                "inverse-primary": "#62df7d",
+                "surface-tint": "#006e2d",
+                "secondary-fixed-dim": "#eec200",
+                "surface-container-low": "#f3f3f4",
+                "on-primary": "#ffffff",
+                "primary": "#006b2c",
+                "surface-bright": "#f9f9f9",
+                "surface-variant": "#e2e2e2",
+                "on-primary-container": "#f7fff2",
+                "on-secondary-fixed": "#231b00",
+                "surface": "#f9f9f9",
+                "on-surface-variant": "#3e4a3d",
+                "tertiary": "#a72d51",
+                "inverse-surface": "#2f3131"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "sidebar-width": "260px",
+                "max-width": "1440px",
+                "margin-mobile": "16px",
+                "gutter": "24px",
+                "margin-desktop": "24px",
+                "base": "8px"
+        },
+        "fontFamily": {
+                "label-md": [
+                        "Inter"
+                ],
+                "body-lg": [
+                        "Inter"
+                ],
+                "headline-md": [
+                        "Inter"
+                ],
+                "headline-lg-mobile": [
+                        "Inter"
+                ],
+                "body-md": [
+                        "Inter"
+                ],
+                "headline-lg": [
+                        "Inter"
+                ],
+                "headline-sm": [
+                        "Inter"
+                ],
+                "label-sm": [
+                        "Inter"
+                ],
+                "data-mono": [
+                        "monospace"
+                ]
+        },
+        "fontSize": {
+                "label-md": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-lg": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-md": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-lg-mobile": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "body-md": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-lg": [
+                        "32px",
+                        {
+                                "lineHeight": "40px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "headline-sm": [
+                        "20px",
+                        {
+                                "lineHeight": "28px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "label-sm": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "500"
+                        }
+                ],
+                "data-mono": [
+                        "13px",
+                        {
+                                "lineHeight": "16px",
+                                "fontWeight": "500"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<!-- Google Fonts & Material Symbols -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined[data-weight="fill"] {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for data tables */
+        .table-container::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .table-container::-webkit-scrollbar-track {
+            background: #f1f5f9; 
+        }
+        .table-container::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        .table-container::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+    </style>
+<!-- Chart.js for data visualization -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen antialiased flex overflow-hidden">
+<!-- Shared Component: SideNavBar -->
+<nav class="fixed left-0 top-0 h-screen w-sidebar-width bg-primary dark:bg-primary flex flex-col py-base shadow-sm z-50">
+<!-- Brand Header -->
+<div class="px-6 mb-8 mt-2 flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg overflow-hidden bg-white shadow-sm flex items-center justify-center shrink-0">
+<img alt="Municipal Logo" class="w-full h-full object-cover p-1" data-alt="A minimalist, modern vector logo design suitable for a municipal fleet control software, featuring abstract geometric shapes representing vehicles and routes. The logo uses a clean corporate color palette of deep blue and slate gray, set against a pure white background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBW6SRZs29Gm3wjZgVl0JltBsDWOjysh-Yb7VXBYFGSfsPYDzWv0s6WQgRU4Nn2eB3HJklIPELmQaPzeTB6pfT3ehVtBx68HL2h0lehb7JankXiiKxhczn7Nr5D4diXM0HJYSarwr28-T19I6ncnpd3CFcAWYP4In6m4b6v92nTtBaEm0Xc3xmulh-nVWnTidDV1cA0nAG34BFj5WVPdL5pydAxtRQscy7bJc2rsgjX9Uuxt2w7cd5pJg"/>
+</div>
+<div>
+<h1 class="font-headline-sm text-headline-sm font-bold text-on-primary">Gestão de Frota</h1>
+<p class="font-label-sm text-label-sm text-on-primary/80">Admin Municipal</p>
+</div>
+</div>
+<!-- Main Navigation Tabs -->
+<div class="flex-1 overflow-y-auto px-base space-y-1">
+<!-- Active Tab: Dashboard -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg border-l-4 border-secondary-container bg-primary-container text-on-primary-container hover:bg-primary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-xl shrink-0" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md">Visão Geral</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-primary hover:bg-primary-container/50 hover:text-on-primary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-xl shrink-0" data-icon="local_shipping">local_shipping</span>
+<span class="font-label-md text-label-md">Veículos</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-primary hover:bg-primary-container/50 hover:text-on-primary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-xl shrink-0" data-icon="route">route</span>
+<span class="font-label-md text-label-md">Rotas</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-primary hover:bg-primary-container/50 hover:text-on-primary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-xl shrink-0" data-icon="local_gas_station">local_gas_station</span>
+<span class="font-label-md text-label-md">Combustível</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-primary hover:bg-primary-container/50 hover:text-on-primary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-xl shrink-0" data-icon="build">build</span>
+<span class="font-label-md text-label-md">Manutenção</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-primary hover:bg-primary-container/50 hover:text-on-primary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-xl shrink-0" data-icon="assessment">assessment</span>
+<span class="font-label-md text-label-md">Relatórios</span>
+</a>
+</div>
+<!-- CTA & Footer -->
+<div class="mt-auto px-base pt-4 border-t border-primary-container">
+<button class="w-full mb-4 py-2.5 px-4 bg-secondary-container text-on-secondary-container rounded-lg font-label-md text-label-md hover:opacity-90 transition-colors active:scale-95 transition-transform shadow-sm flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">download</span>
+                Exportar Dados
+            </button>
+<div class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-2 rounded-lg text-on-primary hover:bg-primary-container/50 hover:text-on-primary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-lg shrink-0" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Configurações</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 rounded-lg text-on-primary hover:bg-primary-container/50 hover:text-on-primary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-lg shrink-0" data-icon="help">help</span>
+<span class="font-label-md text-label-md">Suporte</span>
+</a>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 ml-[260px] flex flex-col h-screen overflow-hidden bg-background">
+<!-- Shared Component: TopAppBar -->
+<header class="fixed top-0 right-0 w-[calc(100%-260px)] h-16 bg-surface dark:bg-surface border-b border-outline-variant shadow-sm z-40 flex justify-between items-center px-margin-desktop">
+<div class="flex items-center gap-4">
+<h2 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">Gestão de Frota Municipal</h2>
+</div>
+<div class="flex items-center gap-4">
+<!-- Search Bar -->
+<div class="relative hidden md:block w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant text-sm">search</span>
+<input class="w-full pl-9 pr-3 py-1.5 bg-surface-container-low border-0 rounded-full font-body-md text-body-md text-on-surface focus-within:ring-2 focus-within:ring-primary transition-all" placeholder="Buscar veículos, rotas..." type="text"/>
+</div>
+<!-- Trailing Actions -->
+<button class="p-2 rounded-full text-on-surface-variant hover:bg-surface-container-low transition-colors relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="p-2 rounded-full text-on-surface-variant hover:bg-surface-container-low transition-colors hidden sm:block">
+<span class="material-symbols-outlined" data-icon="apps">apps</span>
+</button>
+<!-- Profile -->
+<button class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant hover:ring-2 ring-primary transition-all ml-2">
+<img alt="Administrator Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a mature fleet administrator in a business casual gray shirt, slightly smiling. Soft, even studio lighting with a neutral light gray background. Corporate and trustworthy aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_uPHlgD-7Zmvxy1KUb988ucB4HOB29hW_1wueSufG454lcSvm6m8_z1ua5DTXIkyBWsMv_LZW8dT4fN8trFWzjPoSNuroFjjk3_3gHagKdB6UUMpZR6pUpynAm4FlF3CABrztGsEORLZDqtLiSuTNp0jLUy3Np1bVybLS_636xA5oX-ZbR-hjuSQPO825GQV_nqyLX_cxaV9OJM4MdmXmAQm9UXpdted8u1IXMhbRhpkqcPss-u9LGg"/>
+</button>
+</div>
+</header>
+<!-- Scrollable Content Canvas -->
+<div class="flex-1 overflow-y-auto pt-20 pb-8 px-margin-desktop">
+<div class="max-w-max-width mx-auto space-y-6">
+<!-- Header Section -->
+<div class="flex justify-between items-end mb-6">
+<div>
+<h3 class="font-headline-md text-headline-md font-bold text-on-surface">Visão Geral da Frota</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Indicadores e status operacional do mês atual.</p>
+</div>
+<div class="flex gap-2">
+<select class="border border-outline-variant rounded-md py-1.5 pl-3 pr-8 font-label-sm text-label-sm bg-surface text-on-surface focus:ring-primary focus:border-primary shadow-sm">
+<option>Outubro 2023</option>
+<option>Setembro 2023</option>
+</select>
+</div>
+</div>
+<!-- 1. KPI Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-surface-variant hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between h-32">
+<h4 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Total Km Rodados</h4>
+<div class="flex items-baseline justify-between mt-auto">
+<span class="font-headline-lg text-headline-lg text-on-surface">124.5k</span>
+<span class="px-2 py-1 rounded bg-secondary-fixed/50 text-on-secondary-fixed font-label-sm text-[11px] font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">trending_up</span> +5.2%
+                            </span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-surface-variant hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between h-32">
+<h4 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Veículos Ativos</h4>
+<div class="flex items-baseline gap-2 mt-auto">
+<span class="font-headline-lg text-headline-lg text-on-surface">87</span>
+<span class="font-body-md text-on-surface-variant">/ 95 total</span>
+</div>
+<div class="mt-2 w-full bg-surface-variant h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 91%"></div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-surface-variant hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between h-32">
+<h4 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Gasto Combustível (Mês)</h4>
+<div class="flex items-baseline justify-between mt-auto">
+<span class="font-headline-lg text-headline-lg text-on-surface">R$ 42.8k</span>
+<span class="px-2 py-1 rounded bg-red-100 text-red-800 font-label-sm text-[11px] font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">trending_up</span> +12%
+                            </span>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-surface-variant hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between h-32">
+<h4 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Manutenções Pendentes</h4>
+<div class="flex items-baseline gap-2 mt-auto">
+<span class="font-headline-lg text-headline-lg text-error">12</span>
+<span class="font-body-md text-on-surface-variant">veículos</span>
+</div>
+</div>
+</div>
+<!-- Bento Grid Layout for Charts & Tables -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- 2. Gráfico de Gastos (Span 2 columns) -->
+<div class="lg:col-span-2 bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-surface-variant flex flex-col h-[380px]">
+<div class="flex justify-between items-center mb-4">
+<h4 class="font-label-md text-label-md text-on-surface">Evolução de Custos Mensais</h4>
+<button class="p-1 rounded text-on-surface-variant hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-sm">more_vert</span>
+</button>
+</div>
+<div class="flex-1 relative w-full h-full">
+<canvas id="costChart"></canvas>
+</div>
+</div>
+<!-- 4. Categorias de Manutenção (Span 1 column) -->
+<div class="lg:col-span-1 bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-surface-variant flex flex-col h-[380px]">
+<h4 class="font-label-md text-label-md text-on-surface mb-4">Distribuição de Manutenções</h4>
+<div class="flex-1 relative w-full h-full flex items-center justify-center">
+<canvas id="maintenanceChart"></canvas>
+</div>
+<div class="mt-4 grid grid-cols-2 gap-y-3 gap-x-2">
+<div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-primary"></span><span class="font-label-sm text-label-sm text-on-surface-variant">Preventiva (45%)</span></div>
+<div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-secondary-container"></span><span class="font-label-sm text-label-sm text-on-surface-variant">Corretiva (25%)</span></div>
+<div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-secondary-fixed"></span><span class="font-label-sm text-label-sm text-on-surface-variant">Pneus (20%)</span></div>
+<div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-outline-variant"></span><span class="font-label-sm text-label-sm text-on-surface-variant">Óleo (10%)</span></div>
+</div>
+</div>
+<!-- 3. Tabela de Lançamentos (Span full width) -->
+<div class="lg:col-span-3 bg-surface-container-lowest rounded-xl shadow-sm border border-surface-variant overflow-hidden flex flex-col">
+<div class="p-5 border-b border-surface-variant flex justify-between items-center bg-white">
+<div>
+<h4 class="font-label-md text-label-md text-on-surface">Últimos Abastecimentos</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Registros de postos credenciados.</p>
+</div>
+<button class="px-4 py-1.5 border border-outline-variant text-primary rounded-lg font-label-sm text-label-sm hover:bg-surface-container-low transition-colors">
+                                Ver Todos
+                            </button>
+</div>
+<div class="table-container overflow-x-auto">
+<table class="w-full text-left border-collapse min-w-[800px]">
+<thead class="bg-surface-container">
+<tr>
+<th class="px-5 py-3 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider border-b border-surface-variant">Data</th>
+<th class="px-5 py-3 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider border-b border-surface-variant">Veículo</th>
+<th class="px-5 py-3 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider border-b border-surface-variant">Placa</th>
+<th class="px-5 py-3 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider text-right border-b border-surface-variant">Litros</th>
+<th class="px-5 py-3 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider text-right border-b border-surface-variant">Valor (R$)</th>
+<th class="px-5 py-3 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider border-b border-surface-variant">Posto</th>
+<th class="px-5 py-3 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider border-b border-surface-variant">Status</th>
+</tr>
+</thead>
+<tbody class="bg-white text-on-surface font-body-md text-[14px]">
+<tr class="hover:bg-surface-container-lowest transition-colors border-b border-surface-variant last:border-0 group">
+<td class="px-5 py-4 text-on-surface-variant">24/10/2023 14:30</td>
+<td class="px-5 py-4 font-medium text-on-surface">Ambulância UTI 01</td>
+<td class="px-5 py-4"><span class="px-2 py-1 bg-surface-container-low rounded border border-outline-variant/50 font-mono text-[12px] text-on-surface-variant">ABC-1234</span></td>
+<td class="px-5 py-4 text-right text-on-surface-variant">45.0 L</td>
+<td class="px-5 py-4 text-right font-medium">R$ 265,50</td>
+<td class="px-5 py-4 text-on-surface-variant">Posto Central (Rede X)</td>
+<td class="px-5 py-4"><span class="px-2.5 py-1 bg-green-100 text-green-800 rounded font-semibold text-[12px] uppercase tracking-wide">Aprovado</span></td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors border-b border-surface-variant last:border-0 group">
+<td class="px-5 py-4 text-on-surface-variant">24/10/2023 11:15</td>
+<td class="px-5 py-4 font-medium text-on-surface">Caminhão Lixo 04</td>
+<td class="px-5 py-4"><span class="px-2 py-1 bg-surface-container-low rounded border border-outline-variant/50 font-mono text-[12px] text-on-surface-variant">XYZ-9876</span></td>
+<td class="px-5 py-4 text-right text-on-surface-variant">120.5 L</td>
+<td class="px-5 py-4 text-right font-medium">R$ 698,90</td>
+<td class="px-5 py-4 text-on-surface-variant">Posto Rodovia Br</td>
+<td class="px-5 py-4"><span class="px-2.5 py-1 bg-green-100 text-green-800 rounded font-semibold text-[12px] uppercase tracking-wide">Aprovado</span></td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors border-b border-surface-variant last:border-0 group">
+<td class="px-5 py-4 text-on-surface-variant">23/10/2023 16:45</td>
+<td class="px-5 py-4 font-medium text-on-surface">Viatura Fiscal 02</td>
+<td class="px-5 py-4"><span class="px-2 py-1 bg-surface-container-low rounded border border-outline-variant/50 font-mono text-[12px] text-on-surface-variant">DEF-5678</span></td>
+<td class="px-5 py-4 text-right text-on-surface-variant">35.2 L</td>
+<td class="px-5 py-4 text-right font-medium">R$ 207,68</td>
+<td class="px-5 py-4 text-on-surface-variant">Posto Central (Rede X)</td>
+<td class="px-5 py-4"><span class="px-2.5 py-1 bg-red-100 text-red-800 rounded font-semibold text-[12px] uppercase tracking-wide flex items-center w-fit gap-1"><span class="material-symbols-outlined text-[14px]">warning</span> Alerta</span></td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors border-b border-surface-variant last:border-0 group">
+<td class="px-5 py-4 text-on-surface-variant">23/10/2023 09:00</td>
+<td class="px-5 py-4 font-medium text-on-surface">Trator Obras 01</td>
+<td class="px-5 py-4"><span class="px-2 py-1 bg-surface-container-low rounded border border-outline-variant/50 font-mono text-[12px] text-on-surface-variant">MNO-3456</span></td>
+<td class="px-5 py-4 text-right text-on-surface-variant">80.0 L</td>
+<td class="px-5 py-4 text-right font-medium">R$ 464,00</td>
+<td class="px-5 py-4 text-on-surface-variant">Posto Rural BR</td>
+<td class="px-5 py-4"><span class="px-2.5 py-1 bg-yellow-100 text-yellow-800 rounded font-semibold text-[12px] uppercase tracking-wide">Pendente</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div> <!-- End Bento Grid -->
+</div>
+</div>
+</main>
+<!-- Chart Initializations -->
+<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Colors from Tailwind config
+            const colorPrimary = "#006b2c";
+            const colorSecondary = "#fed01b";
+            const colorSecondaryDim = "#ffe083";
+            const colorOutline = "#bdcaba";
+            
+            // 1. Cost Bar Chart
+            const costCtx = document.getElementById('costChart').getContext('2d');
+            new Chart(costCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Maio', 'Jun', 'Jul', 'Ago', 'Set', 'Out'],
+                    datasets: [
+                        {
+                            label: 'Combustível',
+                            data: [35000, 38000, 36500, 41000, 39000, 42800],
+                            backgroundColor: colorPrimary,
+                            borderRadius: 4,
+                            barPercentage: 0.6
+                        },
+                        {
+                            label: 'Manutenção',
+                            data: [15000, 12000, 22000, 14000, 18000, 16500],
+                            backgroundColor: colorSecondary,
+                            borderRadius: 4,
+                            barPercentage: 0.6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            align: 'end',
+                            labels: {
+                                usePointStyle: true,
+                                boxWidth: 8,
+                                font: { family: 'Inter', size: 12 }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#e2e8f0', drawBorder: false },
+                            ticks: {
+                                font: { family: 'Inter', size: 12 },
+                                callback: function(value) { return 'R$ ' + value / 1000 + 'k'; }
+                            }
+                        },
+                        x: {
+                            grid: { display: false, drawBorder: false },
+                            ticks: { font: { family: 'Inter', size: 12 } }
+                        }
+                    },
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                }
+            });
+
+            // 2. Maintenance Doughnut Chart
+            const maintCtx = document.getElementById('maintenanceChart').getContext('2d');
+            new Chart(maintCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Preventiva', 'Corretiva', 'Pneus', 'Óleo'],
+                    datasets: [{
+                        data: [45, 25, 20, 10],
+                        backgroundColor: [
+                            colorPrimary,
+                            colorSecondary,
+                            colorSecondaryDim,
+                            colorOutline
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '75%',
+                    plugins: {
+                        legend: {
+                            display: false // Using custom HTML legend below chart
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': ' + context.parsed + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body></html>

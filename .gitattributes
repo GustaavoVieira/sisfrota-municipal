@@ -1,0 +1,26 @@
+# Padronização de Quebras de Linha e Truncamento no Git
+
+# Definir comportamento padrão para arquivos de texto
+* text=auto eol=lf
+
+# Código-fonte e Linguagens de Programação
+*.php text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+*.sql text eol=lf
+
+# Documentação e Configuração
+*.md text eol=lf
+*.htaccess text eol=lf
+.gitignore text eol=lf
+.gitattributes text eol=lf
+
+# Imagens e Binários (Tratados estritamente como dados binários)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary

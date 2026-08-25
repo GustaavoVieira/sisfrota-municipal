@@ -1,0 +1,42 @@
+# ==========================================
+# SisFrota Municipal - .gitignore
+# ==========================================
+
+# Arquivos do Sistema Operacional (Windows / macOS)
+Thumbs.db
+desktop.ini
+.DS_Store
+ehthumbs.db
+[Dd]esktop.ini
+
+# Editores e IDEs (VS Code, PhpStorm, Visual Studio, Sublime, Vim)
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-workspace
+*.sublime-project
+*.tmp
+
+# Arquivos de Configuração com Segredos Reais / Ambientes Locais
+.env
+.env.*
+config/config.local.php
+
+# Logs de Execução / Runtime (preservando estrutura de pastas via .htaccess)
+logs/*.log
+*.log
+
+# Dumps, Backups e Exportações de Banco de Dados
+*.sql.gz
+*.bak
+*.dump
+dumps/
+backup/
+backups/
+
+# Pastas de Dependências e Builds Futuros (se houver)
+vendor/
+node_modules/
+dist/
+build/

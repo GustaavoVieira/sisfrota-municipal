@@ -1,0 +1,10 @@
+# SisFrota Municipal - Configuração do Apache e Roteamento
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>
+
+# Bloquear exibição do conteúdo de diretórios
+Options -Indexes
