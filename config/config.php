@@ -17,7 +17,7 @@ return [
     ],
     'app' => [
         'name'             => 'SisFrota Municipal',
-        'url'              => 'http://localhost/Projeto%20Prefeitura',
+        'url'              => 'http://localhost/ProjetoPrefeitura',
         'timezone'         => 'America/Sao_Paulo',
         'session_lifetime' => 1800,
         'debug'            => false

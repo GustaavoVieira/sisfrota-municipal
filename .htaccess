@@ -1,10 +1,24 @@
 # SisFrota Municipal - Configuração do Apache e Roteamento
+# Necessário: mod_rewrite habilitado no XAMPP (httpd.conf: AllowOverride All)
+
+Options -Indexes
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
+
+    # Define o caminho base relativo para que o mod_rewrite funcione em subpastas
+    # Ex.: se o projeto estiver em /ProjetoPrefeitura, o RewriteBase deve ser /ProjetoPrefeitura/
+    RewriteBase /ProjetoPrefeitura/
+
+    # Permite acesso direto a arquivos e diretórios existentes (CSS, JS, imagens, etc.)
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
+
+    # Toda requisição desconhecida vai para o index.php (Front Controller)
     RewriteRule ^(.*)$ index.php [QSA,L]
 </IfModule>
 
-# Bloquear exibição do conteúdo de diretórios
-Options -Indexes
+# Fallback: se mod_rewrite não estiver habilitado, exibe mensagem de orientação
+<IfModule !mod_rewrite.c>
+    ErrorDocument 404 /ProjetoPrefeitura/index.php
+</IfModule>

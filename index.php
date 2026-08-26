@@ -14,15 +14,22 @@ $config = require_once __DIR__ . '/config/config.php';
 date_default_timezone_set($config['app']['timezone'] ?? 'America/Sao_Paulo');
 
 // ─── 4. Constantes de caminhos ───────────────────────────────────────────────
-define('ROOT_PATH',  __DIR__);
-define('APP_PATH',   ROOT_PATH . '/app');
+define('ROOT_PATH',   __DIR__);
+define('APP_PATH',    ROOT_PATH . '/app');
 define('CONFIG_PATH', ROOT_PATH . '/config');
-define('VIEWS_PATH', APP_PATH  . '/views');
+define('VIEWS_PATH',  APP_PATH  . '/views');
 
-// ─── 5. URL base do sistema ──────────────────────────────────────────────────
-// Detecta automaticamente a URL base (ex: http://localhost/ProjetoPrefeitura)
-$scriptDir = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
-define('BASE_URL', rtrim($config['app']['url'] ?? ('http://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . $scriptDir), '/'));
+// ─── 5. URL base — sempre detectada dinamicamente ────────────────────────────
+// Garante funcionamento independente da subpasta instalada no servidor.
+// Ex.: http://localhost/ProjetoPrefeitura  ou  https://dominio.com
+$scheme  = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+$host    = $_SERVER['HTTP_HOST'] ?? 'localhost';
+
+// Pega o diretório onde index.php está instalado (relativo à raiz do servidor)
+// Ex.: SCRIPT_NAME = /ProjetoPrefeitura/index.php → subdir = /ProjetoPrefeitura
+$subdir  = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? '/index.php'), '/\\');
+
+define('BASE_URL', $scheme . '://' . $host . $subdir);
 
 // ─── 6. Autoloader simples para models, controllers e helpers ────────────────
 spl_autoload_register(function (string $className): void {
@@ -43,111 +50,116 @@ spl_autoload_register(function (string $className): void {
 require_once APP_PATH . '/helpers/AuthHelper.php';
 AuthHelper::initSession();
 
-// ─── 8. Roteador ─────────────────────────────────────────────────────────────
-// Extrai a rota da URL após o diretório base (sem query string)
-$requestUri  = $_SERVER['REQUEST_URI'] ?? '/';
-$basePath    = $scriptDir;                          // ex: /ProjetoPrefeitura
-$path        = parse_url($requestUri, PHP_URL_PATH);
-$route       = ltrim(substr($path, strlen($basePath)), '/'); // ex: "login" ou "vehicles/new"
-$route       = $route === '' ? 'dashboard' : $route;
+// ─── 8. Extração da rota ──────────────────────────────────────────────────────
+// REQUEST_URI pode conter query string: /ProjetoPrefeitura/vehicles?page=2
+// Removemos o prefixo da subpasta e a query string para obter apenas a rota limpa.
+$requestUri = $_SERVER['REQUEST_URI'] ?? '/';
+$urlPath    = parse_url($requestUri, PHP_URL_PATH); // sem query string
+// Remove o prefixo da subpasta (ex: /ProjetoPrefeitura) e a barra inicial
+$route = ltrim(substr($urlPath, strlen($subdir)), '/');
+$route = ($route === '' || $route === 'index.php') ? 'dashboard' : $route;
 
-// Armazena a rota para uso na Sidebar (highlight do menu ativo)
+// Armazena a rota atual para que a sidebar possa marcar o item ativo
 $_GET['route'] = $route;
 
-// Quebra a rota em segmentos
+// Quebra em segmentos: "vehicles/edit/42" → ['vehicles', 'edit', '42']
 $segments = explode('/', $route);
-$resource = $segments[0] ?? '';                    // ex: "vehicles"
-$action   = $segments[1] ?? 'index';              // ex: "new", "edit", "show"
-$param    = $segments[2] ?? null;                 // ex: "42" (ID)
+$resource = $segments[0] ?? '';
+$action   = $segments[1] ?? 'index';
+$param    = $segments[2] ?? null;
 
-// ─── Definição das Rotas ─────────────────────────────────────────────────────
+// ─── 9. Roteamento ───────────────────────────────────────────────────────────
 try {
 
     switch ($resource) {
 
         // ── Autenticação ──────────────────────────────────────────────────────
-        case '':
         case 'login':
             require_once APP_PATH . '/controllers/AuthController.php';
-            $controller = new AuthController();
-            $controller->login();
+            (new AuthController())->login();
             break;
 
         case 'logout':
             require_once APP_PATH . '/controllers/AuthController.php';
-            $controller = new AuthController();
-            $controller->logout();
+            (new AuthController())->logout();
             break;
 
-        // ── Dashboard ─────────────────────────────────────────────────────────
+        // ── Dashboard (raiz redireciona para dashboard quando logado) ─────────
         case 'dashboard':
             require_once APP_PATH . '/controllers/DashboardController.php';
-            $controller = new DashboardController();
-            $controller->index();
+            (new DashboardController())->index();
             break;
 
-        // ── Veículos (stub - Fase 5) ──────────────────────────────────────────
+        // ── Veículos (stub — Fase 5) ──────────────────────────────────────────
         case 'vehicles':
             AuthHelper::requireLogin();
-            // Stub temporário até a Fase 5
-            $pageTitle = 'Veículos';
             $user = AuthHelper::user();
+            $pageTitle = 'Veículos';
             require_once VIEWS_PATH . '/layouts/header.php';
             echo '<div class="card"><p>Módulo de Veículos — implementação na Fase 5.</p></div>';
             require_once VIEWS_PATH . '/layouts/footer.php';
             break;
 
-        // ── Abastecimentos (stub - Fase 6) ────────────────────────────────────
+        // ── Abastecimentos (stub — Fase 6) ────────────────────────────────────
         case 'fuelings':
             AuthHelper::requireRole(['ADMIN', 'OPERATOR']);
-            $pageTitle = 'Abastecimentos';
             $user = AuthHelper::user();
+            $pageTitle = 'Abastecimentos';
             require_once VIEWS_PATH . '/layouts/header.php';
             echo '<div class="card"><p>Módulo de Abastecimentos — implementação na Fase 6.</p></div>';
             require_once VIEWS_PATH . '/layouts/footer.php';
             break;
 
-        // ── Manutenções (stub - Fase 7) ───────────────────────────────────────
+        // ── Manutenções (stub — Fase 7) ───────────────────────────────────────
         case 'maintenances':
             AuthHelper::requireRole(['ADMIN', 'OPERATOR']);
-            $pageTitle = 'Manutenções';
             $user = AuthHelper::user();
+            $pageTitle = 'Manutenções';
             require_once VIEWS_PATH . '/layouts/header.php';
             echo '<div class="card"><p>Módulo de Manutenções — implementação na Fase 7.</p></div>';
             require_once VIEWS_PATH . '/layouts/footer.php';
             break;
 
-        // ── Relatórios (stub - Fase 9) ────────────────────────────────────────
+        // ── Relatórios (stub — Fase 9) ────────────────────────────────────────
         case 'reports':
             AuthHelper::requireRole(['ADMIN', 'MANAGER']);
-            $pageTitle = 'Relatórios';
             $user = AuthHelper::user();
+            $pageTitle = 'Relatórios';
             require_once VIEWS_PATH . '/layouts/header.php';
             echo '<div class="card"><p>Módulo de Relatórios — implementação na Fase 9.</p></div>';
             require_once VIEWS_PATH . '/layouts/footer.php';
             break;
 
-        // ── Configurações (stub - Fase 4) ─────────────────────────────────────
+        // ── Configurações (stub — Fase 4) ─────────────────────────────────────
         case 'settings':
             AuthHelper::requireRole(['ADMIN']);
-            $pageTitle  = 'Configurações';
             $user = AuthHelper::user();
+            $pageTitle = 'Configurações';
             require_once VIEWS_PATH . '/layouts/header.php';
             echo '<div class="card"><p>Módulo de Configurações — implementação na Fase 4.</p></div>';
             require_once VIEWS_PATH . '/layouts/footer.php';
             break;
 
+        // ── Rota raiz: redireciona para dashboard (se logado) ou login ────────
+        case '':
+            if (AuthHelper::isLoggedIn()) {
+                header('Location: ' . BASE_URL . '/dashboard');
+            } else {
+                header('Location: ' . BASE_URL . '/login');
+            }
+            exit;
+
         // ── Rota não encontrada (404) ─────────────────────────────────────────
         default:
             http_response_code(404);
             if (AuthHelper::isLoggedIn()) {
-                $pageTitle = 'Página não encontrada';
                 $user = AuthHelper::user();
+                $pageTitle = 'Página não encontrada';
                 require_once VIEWS_PATH . '/layouts/header.php';
                 echo '<div class="card" style="text-align:center;padding:3rem;">
                         <div style="font-size:3rem;">🔍</div>
                         <h2 style="margin-top:1rem;">Página não encontrada</h2>
-                        <p style="color:#475569;margin:1rem 0;">A rota solicitada não existe no sistema.</p>
+                        <p style="color:#475569;margin:1rem 0 2rem;">A rota <code>' . htmlspecialchars($route, ENT_QUOTES, 'UTF-8') . '</code> não existe no sistema.</p>
                         <a href="' . BASE_URL . '/dashboard" class="btn-primary">Voltar ao Dashboard</a>
                       </div>';
                 require_once VIEWS_PATH . '/layouts/footer.php';
@@ -159,10 +171,10 @@ try {
     }
 
 } catch (Throwable $e) {
-    // Fallback de erro: mensagem amigável + log em arquivo
+    // Fallback de erro: mensagem amigável ao usuário + log em arquivo (sem expor detalhes)
     $logFile = ROOT_PATH . '/logs/system_error.log';
-    $logMessage = sprintf(
-        "[%s] CRITICAL | IP: %s | URI: %s | Erro: %s | Arquivo: %s | Linha: %d\n",
+    $logLine = sprintf(
+        "[%s] CRITICAL | IP: %s | URI: %s | Erro: %s em %s:%d\n",
         date('Y-m-d H:i:s'),
         $_SERVER['REMOTE_ADDR'] ?? 'CLI',
         $_SERVER['REQUEST_URI'] ?? '-',
@@ -171,20 +183,22 @@ try {
         $e->getLine()
     );
     if ($config['logs']['enabled'] ?? true) {
-        @file_put_contents($logFile, $logMessage, FILE_APPEND | LOCK_EX);
+        @file_put_contents($logFile, $logLine, FILE_APPEND | LOCK_EX);
     }
 
-    // Exibe mensagem genérica sem expor detalhes ao usuário
     http_response_code(500);
     if (!headers_sent()) {
         header('Content-Type: text/html; charset=utf-8');
     }
-    echo '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Erro Interno</title>
+
+    $baseUrlSafe = defined('BASE_URL') ? BASE_URL : '';
+    echo '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Erro Interno — SisFrota</title>
     <style>body{font-family:sans-serif;background:#f8fafc;display:flex;justify-content:center;align-items:center;min-height:100vh;}
-    .err{background:#fff;border:1px solid #e2e8f0;border-radius:.75rem;padding:3rem;text-align:center;max-width:480px;}
-    h2{color:#ef4444;}</style></head><body>
-    <div class="err"><h2>Falha Técnica</h2>
-    <p>Ocorreu uma falha técnica ao processar a solicitação. O erro foi registrado para análise da equipe de TI.</p>
-    <a href="' . (defined('BASE_URL') ? BASE_URL : '') . '/dashboard" style="color:#16a34a;font-weight:600;">Voltar ao Painel</a>
+    .err{background:#fff;border:1px solid #e2e8f0;border-radius:.75rem;padding:3rem 2rem;text-align:center;max-width:480px;}
+    h2{color:#ef4444;margin-bottom:1rem;}</style></head><body>
+    <div class="err">
+        <h2>Falha Técnica</h2>
+        <p>Ocorreu uma falha técnica ao processar a solicitação. O erro foi registrado para análise da equipe de TI.</p>
+        <p style="margin-top:1.5rem;"><a href="' . $baseUrlSafe . '/login" style="color:#16a34a;font-weight:600;">Voltar ao Login</a></p>
     </div></body></html>';
 }
