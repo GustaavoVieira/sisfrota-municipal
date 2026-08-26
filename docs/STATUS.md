@@ -1,8 +1,8 @@
 # Estado do Projeto - SisFrota Municipal
 
-**Última atualização:** 25/08/2026  
-**Fase Atual:** Fase 2 Concluída  
-**Próxima Fase:** Fase 3 - Autenticação, Sessão e Controle de Acesso (RBAC)  
+**Última atualização:** 26/08/2026  
+**Fase Atual:** Fase 3 Concluída  
+**Próxima Fase:** Fase 4 - Cadastros Base (Secretarias, Categorias de Manutenção e Usuários)  
 
 ---
 
@@ -33,11 +33,18 @@
   - [x] Validar execução e idempotência do script CLI.
 
 
-- [ ] **Fase 3 - Autenticação, Sessão e Controle de Acesso (RBAC)**
-  - [ ] Criar Model `User.php` e `AuthController.php`.
-  - [ ] Criar View de Login `app/views/auth/login.php`.
-  - [ ] Implementar verificação de sessão e RBAC (HTTP 403) nos Controllers.
-  - [ ] Criar layouts base (`header.php`, `sidebar.php`, `footer.php`).
+- [x] **Fase 3 - Autenticação, Sessão e Controle de Acesso (RBAC)**
+  - [x] Criar Model `User.php` e `AuthController.php`.
+  - [x] Criar View de Login `app/views/auth/login.php`.
+  - [x] Implementar verificação de sessão e RBAC (HTTP 403) nos Controllers.
+  - [x] Criar layouts base (`header.php`, `sidebar.php`, `footer.php`).
+  - [x] Criar `AuthHelper.php` com sessão segura (HTTPOnly, SameSite, 30min), CSRF e RBAC.
+  - [x] Criar `DashboardController.php` (stub) e `dashboard/index.php`.
+  - [x] Criar tela de erro `app/views/errors/403.php`.
+  - [x] Criar roteador central completo em `index.php` com stubs para Fases 4-9.
+  - [x] Instalar Bootstrap 5.3.3 localmente (`assets/css/` e `assets/js/`).
+  - [x] Criar `assets/css/custom.css` com sistema de design do DESIGN.md.
+  - [x] Testar autenticação via CLI (4/4 testes passando).
 
 - [ ] **Fase 4 - Cadastros Base (Secretarias, Categorias de Manutenção e Usuários)**
   - [ ] Criar CRUD de Secretarias.
@@ -76,4 +83,4 @@
 
 ## Próximo Passo Recomendado
 
-Abrir um novo chat para iniciar a **Fase 3 - Autenticação, Sessão e Controle de Acesso (RBAC)**, criando o Model `User.php`, o `AuthController.php`, a View de Login (`login.php`) e os templates base do sistema (`header.php`, `sidebar.php`, `footer.php`).
+Abrir um novo chat para iniciar a **Fase 4 - Cadastros Base (Secretarias, Categorias de Manutenção e Usuários)**, criando os Models, Controllers e Views de CRUD para secretarias, categorias de manutenção e gestão de contas de usuários, restritos exclusivamente ao perfil `ADMIN`.
