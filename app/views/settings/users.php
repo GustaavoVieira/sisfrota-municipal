@@ -45,7 +45,7 @@ $roleLabels = [
                     <th style="padding: 12px 16px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #475569;">Nome Completo</th>
                     <th style="padding: 12px 16px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #475569; width: 140px; text-align: center;">Perfil (RBAC)</th>
                     <th style="padding: 12px 16px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #475569; width: 110px; text-align: center;">Status</th>
-                    <th style="padding: 12px 16px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #475569; width: 220px; text-align: right;">Ações</th>
+                    <th style="padding: 12px 16px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #475569; text-align: right; white-space: nowrap;">Ações</th>
                 </tr>
             </thead>
             <tbody>
@@ -91,40 +91,42 @@ $roleLabels = [
                                     </span>
                                 <?php endif; ?>
                             </td>
-                            <td style="padding: 12px 16px; text-align: right;">
-                                <button type="button" 
-                                        class="btn btn-sm btn-outline-primary me-1 btn-edit-user" 
-                                        data-id="<?= $u['id'] ?>"
-                                        data-username="<?= htmlspecialchars($u['username'], ENT_QUOTES, 'UTF-8') ?>"
-                                        data-fullname="<?= htmlspecialchars($u['full_name'], ENT_QUOTES, 'UTF-8') ?>"
-                                        data-role="<?= $u['role'] ?>"
-                                        data-status="<?= $u['status'] ?>"
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#modalEditUser"
-                                        style="font-size: 0.8rem;">
-                                    Editar
-                                </button>
-                                <button type="button" 
-                                        class="btn btn-sm btn-outline-secondary me-1 btn-pass-user" 
-                                        data-id="<?= $u['id'] ?>"
-                                        data-username="<?= htmlspecialchars($u['username'], ENT_QUOTES, 'UTF-8') ?>"
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#modalPasswordUser"
-                                        style="font-size: 0.8rem;">
-                                    Alterar Senha
-                                </button>
-                                <?php if (($currentUser['id'] ?? 0) != $u['id']): ?>
+                            <td style="padding: 12px 16px; text-align: right; white-space: nowrap;">
+                                <div class="d-inline-flex align-items-center justify-content-end gap-1">
                                     <button type="button" 
-                                            class="btn btn-sm btn-outline-danger btn-delete-user" 
+                                            class="btn btn-sm btn-outline-primary btn-edit-user" 
                                             data-id="<?= $u['id'] ?>"
                                             data-username="<?= htmlspecialchars($u['username'], ENT_QUOTES, 'UTF-8') ?>"
                                             data-fullname="<?= htmlspecialchars($u['full_name'], ENT_QUOTES, 'UTF-8') ?>"
+                                            data-role="<?= $u['role'] ?>"
+                                            data-status="<?= $u['status'] ?>"
                                             data-bs-toggle="modal" 
-                                            data-bs-target="#modalDeleteUser"
+                                            data-bs-target="#modalEditUser"
                                             style="font-size: 0.8rem;">
-                                        Excluir
+                                        Editar
                                     </button>
-                                <?php endif; ?>
+                                    <button type="button" 
+                                            class="btn btn-sm btn-outline-secondary btn-pass-user" 
+                                            data-id="<?= $u['id'] ?>"
+                                            data-username="<?= htmlspecialchars($u['username'], ENT_QUOTES, 'UTF-8') ?>"
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#modalPasswordUser"
+                                            style="font-size: 0.8rem;">
+                                        Alterar Senha
+                                    </button>
+                                    <?php if (($currentUser['id'] ?? 0) != $u['id']): ?>
+                                        <button type="button" 
+                                                class="btn btn-sm btn-outline-danger btn-delete-user" 
+                                                data-id="<?= $u['id'] ?>"
+                                                data-username="<?= htmlspecialchars($u['username'], ENT_QUOTES, 'UTF-8') ?>"
+                                                data-fullname="<?= htmlspecialchars($u['full_name'], ENT_QUOTES, 'UTF-8') ?>"
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#modalDeleteUser"
+                                                style="font-size: 0.8rem;">
+                                            Excluir
+                                        </button>
+                                    <?php endif; ?>
+                                </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>

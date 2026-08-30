@@ -38,7 +38,7 @@ defined('SYS_ENTRY') or die('Acesso direto negado.');
                     <th style="padding: 12px 16px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #475569;">Nome da Secretaria</th>
                     <th style="padding: 12px 16px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #475569; width: 120px;">Sigla</th>
                     <th style="padding: 12px 16px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #475569; width: 160px; text-align: center;">Veículos Vinculados</th>
-                    <th style="padding: 12px 16px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #475569; width: 160px; text-align: right;">Ações</th>
+                    <th style="padding: 12px 16px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #475569; text-align: right; white-space: nowrap;">Ações</th>
                 </tr>
             </thead>
             <tbody>
@@ -65,28 +65,30 @@ defined('SYS_ENTRY') or die('Acesso direto negado.');
                                     <?= (int)($sec['total_vehicles'] ?? 0) ?> veículo(s)
                                 </span>
                             </td>
-                            <td style="padding: 12px 16px; text-align: right;">
-                                <button type="button" 
-                                        class="btn btn-sm btn-outline-primary me-1 btn-edit-sec" 
-                                        data-id="<?= $sec['id'] ?>"
-                                        data-name="<?= htmlspecialchars($sec['name'], ENT_QUOTES, 'UTF-8') ?>"
-                                        data-acronym="<?= htmlspecialchars($sec['acronym'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#modalEditSecretariat"
-                                        style="font-size: 0.8rem;">
-                                    Editar
-                                </button>
-                                <?php if (($sec['total_vehicles'] ?? 0) == 0): ?>
+                            <td style="padding: 12px 16px; text-align: right; white-space: nowrap;">
+                                <div class="d-inline-flex align-items-center justify-content-end gap-1">
                                     <button type="button" 
-                                            class="btn btn-sm btn-outline-danger btn-delete-sec" 
+                                            class="btn btn-sm btn-outline-primary btn-edit-sec" 
                                             data-id="<?= $sec['id'] ?>"
                                             data-name="<?= htmlspecialchars($sec['name'], ENT_QUOTES, 'UTF-8') ?>"
+                                            data-acronym="<?= htmlspecialchars($sec['acronym'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
                                             data-bs-toggle="modal" 
-                                            data-bs-target="#modalDeleteSecretariat"
+                                            data-bs-target="#modalEditSecretariat"
                                             style="font-size: 0.8rem;">
-                                        Excluir
+                                        Editar
                                     </button>
-                                <?php endif; ?>
+                                    <?php if (($sec['total_vehicles'] ?? 0) == 0): ?>
+                                        <button type="button" 
+                                                class="btn btn-sm btn-outline-danger btn-delete-sec" 
+                                                data-id="<?= $sec['id'] ?>"
+                                                data-name="<?= htmlspecialchars($sec['name'], ENT_QUOTES, 'UTF-8') ?>"
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#modalDeleteSecretariat"
+                                                style="font-size: 0.8rem;">
+                                            Excluir
+                                        </button>
+                                    <?php endif; ?>
+                                </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>

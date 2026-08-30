@@ -39,7 +39,7 @@ defined('SYS_ENTRY') or die('Acesso direto negado.');
                     <th style="padding: 12px 16px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #475569;">Descrição</th>
                     <th style="padding: 12px 16px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #475569; width: 120px; text-align: center;">Status</th>
                     <th style="padding: 12px 16px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #475569; width: 160px; text-align: center;">Manutenções</th>
-                    <th style="padding: 12px 16px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #475569; width: 180px; text-align: right;">Ações</th>
+                    <th style="padding: 12px 16px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #475569; text-align: right; white-space: nowrap;">Ações</th>
                 </tr>
             </thead>
             <tbody>
@@ -77,38 +77,40 @@ defined('SYS_ENTRY') or die('Acesso direto negado.');
                                     <?= (int)($cat['total_maintenances'] ?? 0) ?> registro(s)
                                 </span>
                             </td>
-                            <td style="padding: 12px 16px; text-align: right;">
-                                <button type="button" 
-                                        class="btn btn-sm btn-outline-primary me-1 btn-edit-cat" 
-                                        data-id="<?= $cat['id'] ?>"
-                                        data-name="<?= htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8') ?>"
-                                        data-description="<?= htmlspecialchars($cat['description'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
-                                        data-status="<?= $cat['status'] ?>"
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#modalEditCategory"
-                                        style="font-size: 0.8rem;">
-                                    Editar
-                                </button>
-                                <form action="<?= BASE_URL ?>/settings/categories/toggle" method="POST" class="d-inline me-1">
-                                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>">
-                                    <input type="hidden" name="id" value="<?= $cat['id'] ?>">
-                                    <button type="submit" 
-                                            class="btn btn-sm <?= ($cat['status'] === 'ACTIVE') ? 'btn-outline-warning' : 'btn-outline-success' ?>" 
-                                            style="font-size: 0.8rem;">
-                                        <?= ($cat['status'] === 'ACTIVE') ? 'Inativar' : 'Ativar' ?>
-                                    </button>
-                                </form>
-                                <?php if (($cat['total_maintenances'] ?? 0) == 0): ?>
+                            <td style="padding: 12px 16px; text-align: right; white-space: nowrap;">
+                                <div class="d-inline-flex align-items-center justify-content-end gap-1">
                                     <button type="button" 
-                                            class="btn btn-sm btn-outline-danger btn-delete-cat" 
+                                            class="btn btn-sm btn-outline-primary btn-edit-cat" 
                                             data-id="<?= $cat['id'] ?>"
                                             data-name="<?= htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8') ?>"
+                                            data-description="<?= htmlspecialchars($cat['description'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+                                            data-status="<?= $cat['status'] ?>"
                                             data-bs-toggle="modal" 
-                                            data-bs-target="#modalDeleteCategory"
+                                            data-bs-target="#modalEditCategory"
                                             style="font-size: 0.8rem;">
-                                        Excluir
+                                        Editar
                                     </button>
-                                <?php endif; ?>
+                                    <form action="<?= BASE_URL ?>/settings/categories/toggle" method="POST" class="d-inline m-0">
+                                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>">
+                                        <input type="hidden" name="id" value="<?= $cat['id'] ?>">
+                                        <button type="submit" 
+                                                class="btn btn-sm <?= ($cat['status'] === 'ACTIVE') ? 'btn-outline-warning' : 'btn-outline-success' ?>" 
+                                                style="font-size: 0.8rem;">
+                                            <?= ($cat['status'] === 'ACTIVE') ? 'Inativar' : 'Ativar' ?>
+                                        </button>
+                                    </form>
+                                    <?php if (($cat['total_maintenances'] ?? 0) == 0): ?>
+                                        <button type="button" 
+                                                class="btn btn-sm btn-outline-danger btn-delete-cat" 
+                                                data-id="<?= $cat['id'] ?>"
+                                                data-name="<?= htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8') ?>"
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#modalDeleteCategory"
+                                                style="font-size: 0.8rem;">
+                                            Excluir
+                                        </button>
+                                    <?php endif; ?>
+                                </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>
