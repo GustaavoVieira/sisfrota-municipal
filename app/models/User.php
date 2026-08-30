@@ -184,6 +184,43 @@ class User
     }
 
     /**
+     * Remove um usuário se não houver registros vinculados a ele.
+     */
+    public function delete(int $id): bool
+    {
+        $sql = "DELETE FROM users WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+
+    /**
+     * Verifica se o usuário possui registros associados (como abastecimentos, manutenções, etc.).
+     */
+    public function hasAssociatedRecords(int $id): bool
+    {
+        $queries = [
+            "SELECT COUNT(*) FROM fuelings WHERE created_by = ? OR updated_by = ?",
+            "SELECT COUNT(*) FROM maintenances WHERE created_by = ? OR updated_by = ?",
+            "SELECT COUNT(*) FROM vehicles WHERE created_by = ? OR updated_by = ?",
+            "SELECT COUNT(*) FROM secretariats WHERE created_by = ? OR updated_by = ?",
+            "SELECT COUNT(*) FROM maintenance_categories WHERE created_by = ? OR updated_by = ?",
+            "SELECT COUNT(*) FROM users WHERE created_by = ? OR updated_by = ?",
+        ];
+
+        foreach ($queries as $sql) {
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([$id, $id]);
+            if ((int) $stmt->fetchColumn() > 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Verifica se já existe um nome de usuário cadastrado (exceto no ID informado).
      */
     public function existsUsername(string $username, ?int $excludeId = null): bool

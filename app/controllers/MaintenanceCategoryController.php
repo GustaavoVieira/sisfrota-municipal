@@ -173,4 +173,50 @@ class MaintenanceCategoryController
         header('Location: ' . BASE_URL . '/settings/categories');
         exit;
     }
+
+    /**
+     * Exclui uma categoria de manutenção se não houver registros associados.
+     */
+    public function delete(): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . BASE_URL . '/settings/categories');
+            exit;
+        }
+
+        if (!AuthHelper::verifyCsrfToken($_POST['csrf_token'] ?? '')) {
+            $_SESSION['flash_error'] = 'Token de segurança inválido.';
+            header('Location: ' . BASE_URL . '/settings/categories');
+            exit;
+        }
+
+        $id = (int) ($_POST['id'] ?? 0);
+        if ($id <= 0) {
+            $_SESSION['flash_error'] = 'ID da categoria inválido.';
+            header('Location: ' . BASE_URL . '/settings/categories');
+            exit;
+        }
+
+        $category = $this->categoryModel->getById($id);
+        if (!$category) {
+            $_SESSION['flash_error'] = 'Categoria de manutenção não encontrada.';
+            header('Location: ' . BASE_URL . '/settings/categories');
+            exit;
+        }
+
+        if (($category['total_maintenances'] ?? 0) > 0) {
+            $_SESSION['flash_error'] = 'Não é possível excluir a categoria pois existem manutenções vinculadas a ela.';
+            header('Location: ' . BASE_URL . '/settings/categories');
+            exit;
+        }
+
+        if ($this->categoryModel->delete($id)) {
+            $_SESSION['flash_success'] = 'Categoria de manutenção excluída com sucesso!';
+        } else {
+            $_SESSION['flash_error'] = 'Erro ao excluir a categoria de manutenção.';
+        }
+
+        header('Location: ' . BASE_URL . '/settings/categories');
+        exit;
+    }
 }

@@ -160,6 +160,8 @@ try {
                         $controller->update();
                     } elseif ($subAction === 'toggle') {
                         $controller->toggle();
+                    } elseif ($subAction === 'delete') {
+                        $controller->delete();
                     } else {
                         $controller->index();
                     }
@@ -175,6 +177,8 @@ try {
                         $controller->update();
                     } elseif ($subAction === 'password') {
                         $controller->updatePassword();
+                    } elseif ($subAction === 'delete') {
+                        $controller->delete();
                     } else {
                         $controller->index();
                     }

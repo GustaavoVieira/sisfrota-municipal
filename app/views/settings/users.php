@@ -105,7 +105,7 @@ $roleLabels = [
                                     Editar
                                 </button>
                                 <button type="button" 
-                                        class="btn btn-sm btn-outline-secondary btn-pass-user" 
+                                        class="btn btn-sm btn-outline-secondary me-1 btn-pass-user" 
                                         data-id="<?= $u['id'] ?>"
                                         data-username="<?= htmlspecialchars($u['username'], ENT_QUOTES, 'UTF-8') ?>"
                                         data-bs-toggle="modal" 
@@ -113,6 +113,18 @@ $roleLabels = [
                                         style="font-size: 0.8rem;">
                                     Alterar Senha
                                 </button>
+                                <?php if (($currentUser['id'] ?? 0) != $u['id']): ?>
+                                    <button type="button" 
+                                            class="btn btn-sm btn-outline-danger btn-delete-user" 
+                                            data-id="<?= $u['id'] ?>"
+                                            data-username="<?= htmlspecialchars($u['username'], ENT_QUOTES, 'UTF-8') ?>"
+                                            data-fullname="<?= htmlspecialchars($u['full_name'], ENT_QUOTES, 'UTF-8') ?>"
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#modalDeleteUser"
+                                            style="font-size: 0.8rem;">
+                                        Excluir
+                                    </button>
+                                <?php endif; ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -242,6 +254,30 @@ $roleLabels = [
     </div>
 </div>
 
+<!-- Modal: Excluir Usuário -->
+<div class="modal fade" id="modalDeleteUser" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="border-radius: 0.75rem; border: 1px solid #e2e8f0;">
+            <form action="<?= BASE_URL ?>/settings/users/delete" method="POST">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>">
+                <input type="hidden" name="id" id="delete_user_id" value="">
+                <div class="modal-header" style="border-bottom: 1px solid #e2e8f0; background-color: #fff1f2;">
+                    <h5 class="modal-title font-weight-bold" style="color: #991b1b;">Confirmar Exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <p style="margin-bottom: 0;">Tem certeza que deseja excluir o usuário <strong id="delete_user_fullname" style="color: #0f172a;"></strong> (<span id="delete_user_username" style="font-family: monospace; color: #16a34a;"></span>)?</p>
+                    <p style="margin-top: 0.5rem; font-size: 0.85rem; color: #64748b; margin-bottom: 0;">Esta ação só será permitida se o usuário não possuir registros vinculados no sistema.</p>
+                </div>
+                <div class="modal-footer" style="border-top: 1px solid #e2e8f0; background-color: #f8fafc;">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="border-radius: 0.5rem;">Cancelar</button>
+                    <button type="submit" class="btn btn-danger" style="border-radius: 0.5rem; font-weight: 600;">Excluir Usuário</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.btn-edit-user').forEach(function (button) {
@@ -258,6 +294,14 @@ document.addEventListener('DOMContentLoaded', function () {
         button.addEventListener('click', function () {
             document.getElementById('pass_user_id').value = this.getAttribute('data-id');
             document.getElementById('pass_user_username').textContent = this.getAttribute('data-username');
+        });
+    });
+
+    document.querySelectorAll('.btn-delete-user').forEach(function (button) {
+        button.addEventListener('click', function () {
+            document.getElementById('delete_user_id').value = this.getAttribute('data-id');
+            document.getElementById('delete_user_username').textContent = this.getAttribute('data-username');
+            document.getElementById('delete_user_fullname').textContent = this.getAttribute('data-fullname');
         });
     });
 });

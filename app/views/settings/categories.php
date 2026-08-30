@@ -89,7 +89,7 @@ defined('SYS_ENTRY') or die('Acesso direto negado.');
                                         style="font-size: 0.8rem;">
                                     Editar
                                 </button>
-                                <form action="<?= BASE_URL ?>/settings/categories/toggle" method="POST" class="d-inline">
+                                <form action="<?= BASE_URL ?>/settings/categories/toggle" method="POST" class="d-inline me-1">
                                     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>">
                                     <input type="hidden" name="id" value="<?= $cat['id'] ?>">
                                     <button type="submit" 
@@ -98,6 +98,17 @@ defined('SYS_ENTRY') or die('Acesso direto negado.');
                                         <?= ($cat['status'] === 'ACTIVE') ? 'Inativar' : 'Ativar' ?>
                                     </button>
                                 </form>
+                                <?php if (($cat['total_maintenances'] ?? 0) == 0): ?>
+                                    <button type="button" 
+                                            class="btn btn-sm btn-outline-danger btn-delete-cat" 
+                                            data-id="<?= $cat['id'] ?>"
+                                            data-name="<?= htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8') ?>"
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#modalDeleteCategory"
+                                            style="font-size: 0.8rem;">
+                                        Excluir
+                                    </button>
+                                <?php endif; ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -180,6 +191,29 @@ defined('SYS_ENTRY') or die('Acesso direto negado.');
     </div>
 </div>
 
+<!-- Modal: Excluir Categoria -->
+<div class="modal fade" id="modalDeleteCategory" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="border-radius: 0.75rem; border: 1px solid #e2e8f0;">
+            <form action="<?= BASE_URL ?>/settings/categories/delete" method="POST">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>">
+                <input type="hidden" name="id" id="delete_cat_id" value="">
+                <div class="modal-header" style="border-bottom: 1px solid #e2e8f0; background-color: #fff1f2;">
+                    <h5 class="modal-title font-weight-bold" style="color: #991b1b;">Confirmar Exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <p style="margin-bottom: 0;">Tem certeza que deseja excluir a categoria <strong id="delete_cat_name" style="color: #0f172a;"></strong>?</p>
+                </div>
+                <div class="modal-footer" style="border-top: 1px solid #e2e8f0; background-color: #f8fafc;">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="border-radius: 0.5rem;">Cancelar</button>
+                    <button type="submit" class="btn btn-danger" style="border-radius: 0.5rem; font-weight: 600;">Excluir Categoria</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.btn-edit-cat').forEach(function (button) {
@@ -188,6 +222,13 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('edit_cat_name').value = this.getAttribute('data-name');
             document.getElementById('edit_cat_desc').value = this.getAttribute('data-description');
             document.getElementById('edit_cat_status').value = this.getAttribute('data-status');
+        });
+    });
+
+    document.querySelectorAll('.btn-delete-cat').forEach(function (button) {
+        button.addEventListener('click', function () {
+            document.getElementById('delete_cat_id').value = this.getAttribute('data-id');
+            document.getElementById('delete_cat_name').textContent = this.getAttribute('data-name');
         });
     });
 });

@@ -136,6 +136,18 @@ class MaintenanceCategory
     }
 
     /**
+     * Remove uma categoria de manutenção se não houver registros associados.
+     */
+    public function delete(int $id): bool
+    {
+        $sql = "DELETE FROM maintenance_categories WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+
+    /**
      * Verifica se já existe uma categoria com o mesmo nome (exceto no ID informado).
      */
     public function existsName(string $name, ?int $excludeId = null): bool

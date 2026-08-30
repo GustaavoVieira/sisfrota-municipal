@@ -191,4 +191,58 @@ class UserController
         header('Location: ' . BASE_URL . '/settings/users');
         exit;
     }
+
+    /**
+     * Exclui uma conta de usuário se não houver vínculos e não for o usuário logado.
+     */
+    public function delete(): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . BASE_URL . '/settings/users');
+            exit;
+        }
+
+        if (!AuthHelper::verifyCsrfToken($_POST['csrf_token'] ?? '')) {
+            $_SESSION['flash_error'] = 'Token de segurança inválido.';
+            header('Location: ' . BASE_URL . '/settings/users');
+            exit;
+        }
+
+        $id   = (int) ($_POST['id'] ?? 0);
+        $user = AuthHelper::user();
+
+        if ($id <= 0) {
+            $_SESSION['flash_error'] = 'ID de usuário inválido.';
+            header('Location: ' . BASE_URL . '/settings/users');
+            exit;
+        }
+
+        if ($user['id'] == $id) {
+            $_SESSION['flash_error'] = 'Você não pode excluir sua própria conta de usuário logada.';
+            header('Location: ' . BASE_URL . '/settings/users');
+            exit;
+        }
+
+        $targetUser = $this->userModel->findById($id);
+        if (!$targetUser) {
+            $_SESSION['flash_error'] = 'Usuário não encontrado.';
+            header('Location: ' . BASE_URL . '/settings/users');
+            exit;
+        }
+
+        if ($this->userModel->hasAssociatedRecords($id)) {
+            $_SESSION['flash_error'] = 'Não é possível excluir este usuário pois ele possui registros vinculados no sistema. Em vez de excluir, inative a conta.';
+            header('Location: ' . BASE_URL . '/settings/users');
+            exit;
+        }
+
+        if ($this->userModel->delete($id)) {
+            $_SESSION['flash_success'] = 'Usuário excluído com sucesso!';
+        } else {
+            $_SESSION['flash_error'] = 'Erro ao excluir o usuário.';
+        }
+
+        header('Location: ' . BASE_URL . '/settings/users');
+        exit;
+    }
 }
