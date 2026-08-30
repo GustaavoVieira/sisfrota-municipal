@@ -90,14 +90,27 @@ try {
             (new DashboardController())->index();
             break;
 
-        // ── Veículos (stub — Fase 5) ──────────────────────────────────────────
+        // ── Veículos (Fase 5) ─────────────────────────────────────────────────
         case 'vehicles':
-            AuthHelper::requireLogin();
-            $user = AuthHelper::user();
-            $pageTitle = 'Veículos';
-            require_once VIEWS_PATH . '/layouts/header.php';
-            echo '<div class="card"><p>Módulo de Veículos — implementação na Fase 5.</p></div>';
-            require_once VIEWS_PATH . '/layouts/footer.php';
+            require_once APP_PATH . '/controllers/VehicleController.php';
+            $controller = new VehicleController();
+            if ($action === 'new' || $action === 'create') {
+                $controller->create();
+            } elseif ($action === 'store') {
+                $controller->store();
+            } elseif ($action === 'show' && $param !== null) {
+                $controller->show((int) $param);
+            } elseif ($action === 'edit' && $param !== null) {
+                $controller->edit((int) $param);
+            } elseif ($action === 'update' && $param !== null) {
+                $controller->update((int) $param);
+            } elseif ($action === 'inactivate' && $param !== null) {
+                $controller->softDelete((int) $param);
+            } elseif ($action === 'destroy' && $param !== null) {
+                $controller->hardDelete((int) $param);
+            } else {
+                $controller->index();
+            }
             break;
 
         // ── Abastecimentos (stub — Fase 6) ────────────────────────────────────

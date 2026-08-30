@@ -1,8 +1,8 @@
 # Estado do Projeto - SisFrota Municipal
 
 **Última atualização:** 30/08/2026  
-**Fase Atual:** Fase 4 Concluída  
-**Próxima Fase:** Fase 5 - Módulo de Veículos e Ficha Individual  
+**Fase Atual:** Fase 5 Concluída  
+**Próxima Fase:** Fase 6 - Módulo de Abastecimentos e Validação Bloqueante de KM  
 
 ---
 
@@ -54,10 +54,13 @@
   - [x] Garantir validações de segurança (RBAC para ADMIN, tokens CSRF, sanitização contra XSS, hash BCrypt de senhas).
   - [x] Testar operações CRUD e integridade via script CLI.
 
-- [ ] **Fase 5 - Módulo de Veículos e Ficha Individual**
-  - [ ] Criar `FormatHelper.php` (formatação de placas e moedas).
-  - [ ] Criar Model `Vehicle.php` com Soft Delete (`is_deleted`).
-  - [ ] Criar `VehicleController.php` e Views (listagem, formulário e ficha individual).
+- [x] **Fase 5 - Módulo de Veículos e Ficha Individual**
+  - [x] Criar `FormatHelper.php` (formatação de placas tradicionais/Mercosul, moeda R$, números e datas).
+  - [x] Criar Model `Vehicle.php` com suporte a Soft Delete (`is_deleted`), Hard Delete (com proteção de FK), unicidade de placas e histórico.
+  - [x] Criar `VehicleController.php` e Views (`vehicles/index.php`, `vehicles/form.php` e `vehicles/show.php`).
+  - [x] Atualizar roteamento central em `index.php` para o recurso `/vehicles` e suas ações.
+  - [x] Garantir validações de segurança (RBAC para ADMIN, OPERATOR e MANAGER, tokens CSRF e XSS sanitização).
+  - [x] Executar testes automatizados via CLI em `tests/test_fase5.php` (20/20 testes aprovados).
 
 - [ ] **Fase 6 - Módulo de Abastecimentos e Validação Bloqueante de KM**
   - [ ] Criar Model `Fueling.php` com trava de KM e cálculo de $\text{KM/L}$.
@@ -86,4 +89,4 @@
 
 ## Próximo Passo Recomendado
 
-Abrir um novo chat para iniciar a **Fase 5 - Módulo de Veículos e Ficha Individual**, criando o helper `FormatHelper.php`, o Model `Vehicle.php` com suporte a Soft Delete (`is_deleted`), o `VehicleController.php` e as Views de listagem, cadastro/edição e Ficha Individual do Veículo com histórico de abastecimentos e manutenções.
+Abrir um novo chat para iniciar a **Fase 6 - Módulo de Abastecimentos e Validação Bloqueante de KM**, criando o Model `Fueling.php` com a validação bloqueante de quilometragem e cálculo automático de $\text{KM/L}$, o `FuelingController.php` e as Views de lançamento e consulta de abastecimentos.
