@@ -130,14 +130,56 @@ try {
             require_once VIEWS_PATH . '/layouts/footer.php';
             break;
 
-        // ── Configurações (stub — Fase 4) ─────────────────────────────────────
+        // ── Configurações (Fase 4: Secretarias, Categorias e Usuários) ────────
         case 'settings':
             AuthHelper::requireRole(['ADMIN']);
-            $user = AuthHelper::user();
-            $pageTitle = 'Configurações';
-            require_once VIEWS_PATH . '/layouts/header.php';
-            echo '<div class="card"><p>Módulo de Configurações — implementação na Fase 4.</p></div>';
-            require_once VIEWS_PATH . '/layouts/footer.php';
+            $subResource = $segments[1] ?? 'users';
+            $subAction   = $segments[2] ?? 'index';
+
+            switch ($subResource) {
+                case 'secretariats':
+                    require_once APP_PATH . '/controllers/SecretariatController.php';
+                    $controller = new SecretariatController();
+                    if ($subAction === 'store') {
+                        $controller->store();
+                    } elseif ($subAction === 'update') {
+                        $controller->update();
+                    } elseif ($subAction === 'delete') {
+                        $controller->delete();
+                    } else {
+                        $controller->index();
+                    }
+                    break;
+
+                case 'categories':
+                    require_once APP_PATH . '/controllers/MaintenanceCategoryController.php';
+                    $controller = new MaintenanceCategoryController();
+                    if ($subAction === 'store') {
+                        $controller->store();
+                    } elseif ($subAction === 'update') {
+                        $controller->update();
+                    } elseif ($subAction === 'toggle') {
+                        $controller->toggle();
+                    } else {
+                        $controller->index();
+                    }
+                    break;
+
+                case 'users':
+                default:
+                    require_once APP_PATH . '/controllers/UserController.php';
+                    $controller = new UserController();
+                    if ($subAction === 'store') {
+                        $controller->store();
+                    } elseif ($subAction === 'update') {
+                        $controller->update();
+                    } elseif ($subAction === 'password') {
+                        $controller->updatePassword();
+                    } else {
+                        $controller->index();
+                    }
+                    break;
+            }
             break;
 
         // ── Rota raiz: redireciona para dashboard (se logado) ou login ────────

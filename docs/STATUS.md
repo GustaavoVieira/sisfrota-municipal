@@ -1,8 +1,8 @@
 # Estado do Projeto - SisFrota Municipal
 
-**Última atualização:** 26/08/2026  
-**Fase Atual:** Fase 3 Concluída  
-**Próxima Fase:** Fase 4 - Cadastros Base (Secretarias, Categorias de Manutenção e Usuários)  
+**Última atualização:** 30/08/2026  
+**Fase Atual:** Fase 4 Concluída  
+**Próxima Fase:** Fase 5 - Módulo de Veículos e Ficha Individual  
 
 ---
 
@@ -46,10 +46,13 @@
   - [x] Criar `assets/css/custom.css` com sistema de design do DESIGN.md.
   - [x] Testar autenticação via CLI (4/4 testes passando).
 
-- [ ] **Fase 4 - Cadastros Base (Secretarias, Categorias de Manutenção e Usuários)**
-  - [ ] Criar CRUD de Secretarias.
-  - [ ] Criar CRUD de Categorias de Manutenção.
-  - [ ] Criar CRUD de Usuários.
+- [x] **Fase 4 - Cadastros Base (Secretarias, Categorias de Manutenção e Usuários)**
+  - [x] Criar Model `Secretariat.php`, `SecretariatController.php` e View `app/views/settings/secretariats.php`.
+  - [x] Criar Model `MaintenanceCategory.php`, `MaintenanceCategoryController.php` e View `app/views/settings/categories.php`.
+  - [x] Expandir Model `User.php`, criar `UserController.php` e View `app/views/settings/users.php`.
+  - [x] Atualizar roteamento em `index.php` para `/settings/*` (secretariats, categories, users).
+  - [x] Garantir validações de segurança (RBAC para ADMIN, tokens CSRF, sanitização contra XSS, hash BCrypt de senhas).
+  - [x] Testar operações CRUD e integridade via script CLI.
 
 - [ ] **Fase 5 - Módulo de Veículos e Ficha Individual**
   - [ ] Criar `FormatHelper.php` (formatação de placas e moedas).
@@ -83,4 +86,4 @@
 
 ## Próximo Passo Recomendado
 
-Abrir um novo chat para iniciar a **Fase 4 - Cadastros Base (Secretarias, Categorias de Manutenção e Usuários)**, criando os Models, Controllers e Views de CRUD para secretarias, categorias de manutenção e gestão de contas de usuários, restritos exclusivamente ao perfil `ADMIN`.
+Abrir um novo chat para iniciar a **Fase 5 - Módulo de Veículos e Ficha Individual**, criando o helper `FormatHelper.php`, o Model `Vehicle.php` com suporte a Soft Delete (`is_deleted`), o `VehicleController.php` e as Views de listagem, cadastro/edição e Ficha Individual do Veículo com histórico de abastecimentos e manutenções.
