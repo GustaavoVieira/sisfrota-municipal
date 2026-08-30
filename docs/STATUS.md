@@ -1,8 +1,8 @@
 # Estado do Projeto - SisFrota Municipal
 
 **Última atualização:** 30/08/2026  
-**Fase Atual:** Fase 5 Concluída  
-**Próxima Fase:** Fase 6 - Módulo de Abastecimentos e Validação Bloqueante de KM  
+**Fase Atual:** Fase 6 Concluída  
+**Próxima Fase:** Fase 7 - Módulo de Manutenções e Gestão de Status  
 
 ---
 
@@ -62,10 +62,12 @@
   - [x] Garantir validações de segurança (RBAC para ADMIN, OPERATOR e MANAGER, tokens CSRF e XSS sanitização).
   - [x] Executar testes automatizados via CLI em `tests/test_fase5.php` (20/20 testes aprovados).
 
-- [ ] **Fase 6 - Módulo de Abastecimentos e Validação Bloqueante de KM**
-  - [ ] Criar Model `Fueling.php` com trava de KM e cálculo de $\text{KM/L}$.
-  - [ ] Criar `FuelingController.php` e Views.
-  - [ ] Atualização automática de `current_km` no veículo.
+- [x] **Fase 6 - Módulo de Abastecimentos e Validação Bloqueante de KM**
+  - [x] Criar Model `Fueling.php` com trava rígida de KM e cálculo de $\text{KM/L}$ a partir do 2º abastecimento.
+  - [x] Criar `FuelingController.php` e Views (`fuelings/index.php` e `fuelings/form.php`).
+  - [x] Atualização automática de `current_km` no veículo em cada abastecimento válido.
+  - [x] Atualizar roteamento central em `index.php` para o recurso `/fuelings`.
+  - [x] Executar testes automatizados via CLI em `tests/test_fase6.php` (15/15 testes aprovados).
 
 - [ ] **Fase 7 - Módulo de Manutenções e Gestão de Status**
   - [ ] Criar Model `Maintenance.php` e `MaintenanceController.php`.
@@ -89,4 +91,4 @@
 
 ## Próximo Passo Recomendado
 
-Abrir um novo chat para iniciar a **Fase 6 - Módulo de Abastecimentos e Validação Bloqueante de KM**, criando o Model `Fueling.php` com a validação bloqueante de quilometragem e cálculo automático de $\text{KM/L}$, o `FuelingController.php` e as Views de lançamento e consulta de abastecimentos.
+Abrir um novo chat para iniciar a **Fase 7 - Módulo de Manutenções e Gestão de Status**, criando o Model `Maintenance.php`, `MaintenanceController.php`, Views de lançamento e consulta de ordens de serviço de manutenção mecânica e a transição de status do veículo para `MAINTENANCE` e `ACTIVE`.

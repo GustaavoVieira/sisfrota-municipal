@@ -113,14 +113,23 @@ try {
             }
             break;
 
-        // ── Abastecimentos (stub — Fase 6) ────────────────────────────────────
+        // ── Abastecimentos (Fase 6) ───────────────────────────────────────────
         case 'fuelings':
-            AuthHelper::requireRole(['ADMIN', 'OPERATOR']);
-            $user = AuthHelper::user();
-            $pageTitle = 'Abastecimentos';
-            require_once VIEWS_PATH . '/layouts/header.php';
-            echo '<div class="card"><p>Módulo de Abastecimentos — implementação na Fase 6.</p></div>';
-            require_once VIEWS_PATH . '/layouts/footer.php';
+            require_once APP_PATH . '/controllers/FuelingController.php';
+            $controller = new FuelingController();
+            if ($action === 'new' || $action === 'create') {
+                $controller->create();
+            } elseif ($action === 'store') {
+                $controller->store();
+            } elseif ($action === 'edit' && $param !== null) {
+                $controller->edit((int) $param);
+            } elseif ($action === 'update' && $param !== null) {
+                $controller->update((int) $param);
+            } elseif ($action === 'delete' && $param !== null) {
+                $controller->delete((int) $param);
+            } else {
+                $controller->index();
+            }
             break;
 
         // ── Manutenções (stub — Fase 7) ───────────────────────────────────────
