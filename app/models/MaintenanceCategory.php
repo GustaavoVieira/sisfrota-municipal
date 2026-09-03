@@ -148,6 +148,31 @@ class MaintenanceCategory
     }
 
     /**
+     * Alias de getAll() — retorna todas as categorias (ativas e inativas).
+     * Mantém consistência com o padrão findAll() dos demais Models.
+     */
+    public function findAll(): array
+    {
+        return $this->getAll(false);
+    }
+
+    /**
+     * Alias de getAll(true) — retorna apenas categorias ACTIVE.
+     */
+    public function findAllActive(): array
+    {
+        return $this->getAll(true);
+    }
+
+    /**
+     * Alias de getById() — mantém consistência com o padrão findById() dos demais Models.
+     */
+    public function findById(int $id): ?array
+    {
+        return $this->getById($id);
+    }
+
+    /**
      * Verifica se já existe uma categoria com o mesmo nome (exceto no ID informado).
      */
     public function existsName(string $name, ?int $excludeId = null): bool

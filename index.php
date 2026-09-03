@@ -132,14 +132,23 @@ try {
             }
             break;
 
-        // ── Manutenções (stub — Fase 7) ───────────────────────────────────────
+        // ── Manutenções (Fase 7) ───────────────────────────────────────────────
         case 'maintenances':
-            AuthHelper::requireRole(['ADMIN', 'OPERATOR']);
-            $user = AuthHelper::user();
-            $pageTitle = 'Manutenções';
-            require_once VIEWS_PATH . '/layouts/header.php';
-            echo '<div class="card"><p>Módulo de Manutenções — implementação na Fase 7.</p></div>';
-            require_once VIEWS_PATH . '/layouts/footer.php';
+            require_once APP_PATH . '/controllers/MaintenanceController.php';
+            $controller = new MaintenanceController();
+            if ($action === 'new' || $action === 'create') {
+                $controller->create();
+            } elseif ($action === 'store') {
+                $controller->store();
+            } elseif ($action === 'edit' && $param !== null) {
+                $controller->edit((int) $param);
+            } elseif ($action === 'update' && $param !== null) {
+                $controller->update((int) $param);
+            } elseif ($action === 'delete' && $param !== null) {
+                $controller->delete((int) $param);
+            } else {
+                $controller->index();
+            }
             break;
 
         // ── Relatórios (stub — Fase 9) ────────────────────────────────────────

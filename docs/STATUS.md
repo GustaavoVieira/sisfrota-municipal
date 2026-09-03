@@ -1,8 +1,8 @@
 # Estado do Projeto - SisFrota Municipal
 
-**Última atualização:** 30/08/2026  
-**Fase Atual:** Fase 6 Concluída  
-**Próxima Fase:** Fase 7 - Módulo de Manutenções e Gestão de Status  
+**Última atualização:** 02/09/2026  
+**Fase Atual:** Fase 7 Concluída  
+**Próxima Fase:** Fase 8 - Dashboard Gerencial e Indicadores  
 
 ---
 
@@ -69,9 +69,16 @@
   - [x] Atualizar roteamento central em `index.php` para o recurso `/fuelings`.
   - [x] Executar testes automatizados via CLI em `tests/test_fase6.php` (15/15 testes aprovados).
 
-- [ ] **Fase 7 - Módulo de Manutenções e Gestão de Status**
-  - [ ] Criar Model `Maintenance.php` e `MaintenanceController.php`.
-  - [ ] Implementar transição de status de veículos para `MAINTENANCE` / `ACTIVE`.
+- [x] **Fase 7 - Módulo de Manutenções e Gestão de Status**
+  - [x] Criar Model `Maintenance.php` com CRUD completo, validações e sincronização de status do veículo.
+  - [x] Adicionar métodos alias `findAll()`, `findAllActive()` e `findById()` em `MaintenanceCategory.php`.
+  - [x] Criar `MaintenanceController.php` com ações `index`, `create`, `store`, `edit`, `update` e `delete`.
+  - [x] Criar View de listagem `app/views/maintenances/index.php` com filtros por OS, veículo, categoria e status.
+  - [x] Criar View de formulário `app/views/maintenances/form.php` (criação para Admin/Operador, edição para Admin/Operador).
+  - [x] Implementar transição automática de status: OS em `IN_PROGRESS`/`PENDING` → veículo para `MAINTENANCE`; OS `COMPLETED` + sem pendências → veículo para `ACTIVE`.
+  - [x] Atualizar roteamento central em `index.php` para o recurso `/maintenances` e suas ações.
+  - [x] Atualizar `sidebar.php` para exibir "Manutenções" para perfis `ADMIN`, `OPERATOR` e `MANAGER`.
+  - [x] Executar testes automatizados via CLI em `tests/test_fase7.php` (13/13 testes aprovados).
 
 - [ ] **Fase 8 - Dashboard Gerencial e Indicadores**
   - [ ] Criar `DashboardController.php` com métricas consolidadas.
@@ -91,4 +98,4 @@
 
 ## Próximo Passo Recomendado
 
-Abrir um novo chat para iniciar a **Fase 7 - Módulo de Manutenções e Gestão de Status**, criando o Model `Maintenance.php`, `MaintenanceController.php`, Views de lançamento e consulta de ordens de serviço de manutenção mecânica e a transição de status do veículo para `MAINTENANCE` e `ACTIVE`.
+Abrir um novo chat para iniciar a **Fase 8 - Dashboard Gerencial e Indicadores**, criando o `DashboardController.php` com consultas agregadas das 4 métricas do mês (Gasto Total, Combustível, KM Rodado, Veículos Indisponíveis), integrando o Chart.js local para os gráficos de evolução de gastos e proporção de manutenções, e desenvolvendo a View `app/views/dashboard/index.php` com seletor de mês/ano de referência.

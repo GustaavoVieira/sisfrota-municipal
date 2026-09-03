@@ -65,13 +65,14 @@ $roleCssClass = $roleCssClasses[$role]     ?? '';
             Veículos
         </a>
 
-        <!-- Abastecimentos: ADMIN e OPERATOR -->
-        <?php if (in_array($role, ['ADMIN', 'OPERATOR'], true)): ?>
         <div class="nav-section-title">Operações</div>
+        <?php if (in_array($role, ['ADMIN', 'OPERATOR'], true)): ?>
         <a href="<?= $baseUrl ?>/fuelings" class="<?= navClass('fuelings', $currentRoute) ?>">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22V9l7-7 7 7v13"/><path d="M10 22v-5h4v5"/><path d="M14 8h2l2 2v3"/><circle cx="18" cy="16" r="2"/></svg>
             Abastecimentos
         </a>
+        <?php endif; ?>
+        <?php if (in_array($role, ['ADMIN', 'OPERATOR', 'MANAGER'], true)): ?>
         <a href="<?= $baseUrl ?>/maintenances" class="<?= navClass('maintenances', $currentRoute) ?>">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
             Manutenções

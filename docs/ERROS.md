@@ -26,3 +26,10 @@ Este arquivo é destinado a registrar falhas técnicas, bugs de execução e com
 - **Solução aplicada:** Removido o encapsulamento de transação explícita (`$pdo->beginTransaction()`) no executor de migrations DDL `database/migrate.php`. O controle de idempotência e ordenação passa pela verificação individual de cada arquivo na tabela `migrations`.
 - **Como evitar no futuro:** Nunca envolver instruções DDL do MySQL dentro de transações manuais do PDO.
 
+## 02/09/2026 - PDOException: Invalid parameter number com placeholder :search duplicado
+
+- **Sintoma:** Ao executar `$maintModel->findAll(['search' => 'OS-TEST-701'])` no teste da Fase 7, ocorreu `PDOException: SQLSTATE[HY093]: Invalid parameter number` na linha de `execute()` do `Maintenance::findAll()`.
+- **Causa:** O driver PDO do MySQL não aceita o mesmo named placeholder (`:search`) mais de uma vez na mesma instrução SQL preparada. O código usava `LOWER(v.plate) LIKE :search OR LOWER(v.model) LIKE :search OR ...` com o mesmo placeholder repetido 4 vezes.
+- **Solução aplicada:** Substituídos os quatro usos de `:search` por quatro placeholders únicos (`:search1`, `:search2`, `:search3`, `:search4`) e adicionados todos ao array `$params`.
+- **Como evitar no futuro:** Ao construir cláusulas `LIKE` ou `IN` com múltiplas colunas no PDO com MySQL, usar sempre placeholders com nomes distintos ou utilizar `PDO::ATTR_EMULATE_PREPARES = true` (menos seguro).
+
