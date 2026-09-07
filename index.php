@@ -151,14 +151,17 @@ try {
             }
             break;
 
-        // ── Relatórios (stub — Fase 9) ────────────────────────────────────────
+        // ── Relatórios (Fase 9) ───────────────────────────────────────────────
         case 'reports':
-            AuthHelper::requireRole(['ADMIN', 'MANAGER']);
-            $user = AuthHelper::user();
-            $pageTitle = 'Relatórios';
-            require_once VIEWS_PATH . '/layouts/header.php';
-            echo '<div class="card"><p>Módulo de Relatórios — implementação na Fase 9.</p></div>';
-            require_once VIEWS_PATH . '/layouts/footer.php';
+            require_once APP_PATH . '/controllers/ReportController.php';
+            $controller = new ReportController();
+            if ($action === 'csv') {
+                $controller->exportCsv();
+            } elseif ($action === 'pdf') {
+                $controller->exportPdf();
+            } else {
+                $controller->index();
+            }
             break;
 
         // ── Configurações (Fase 4: Secretarias, Categorias e Usuários) ────────

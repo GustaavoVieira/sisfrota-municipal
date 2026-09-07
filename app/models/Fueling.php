@@ -40,6 +40,11 @@ class Fueling
             $params[':vehicle_id'] = (int) $filters['vehicle_id'];
         }
 
+        if (!empty($filters['secretariat_id'])) {
+            $sql .= " AND v.secretariat_id = :secretariat_id";
+            $params[':secretariat_id'] = (int) $filters['secretariat_id'];
+        }
+
         if (!empty($filters['start_date'])) {
             $sql .= " AND f.fueling_date >= :start_date";
             $params[':start_date'] = $filters['start_date'] . ' 00:00:00';

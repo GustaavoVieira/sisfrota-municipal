@@ -31,6 +31,14 @@ class Secretariat
     }
 
     /**
+     * Alias de getAll() para padronização.
+     */
+    public function findAll(): array
+    {
+        return $this->getAll();
+    }
+
+    /**
      * Busca uma secretaria pelo ID.
      */
     public function getById(int $id): ?array
@@ -42,6 +50,14 @@ class Secretariat
 
         $result = $stmt->fetch();
         return $result ?: null;
+    }
+
+    /**
+     * Alias de getById() para padronização.
+     */
+    public function findById(int $id): ?array
+    {
+        return $this->getById($id);
     }
 
     /**

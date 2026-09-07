@@ -42,6 +42,11 @@ class Maintenance
             $params[':vehicle_id'] = (int) $filters['vehicle_id'];
         }
 
+        if (!empty($filters['secretariat_id'])) {
+            $sql .= " AND v.secretariat_id = :secretariat_id";
+            $params[':secretariat_id'] = (int) $filters['secretariat_id'];
+        }
+
         if (!empty($filters['category_id'])) {
             $sql .= " AND m.category_id = :category_id";
             $params[':category_id'] = (int) $filters['category_id'];

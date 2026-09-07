@@ -37,9 +37,6 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '';
     <div class="kpi-card" style="border-top: 4px solid var(--primary-color);">
         <div class="kpi-card-header">
             <span class="kpi-label">Gasto Total no Mês</span>
-            <div class="kpi-icon-box" style="background-color: #dcfce7; color: var(--primary-color);">
-                💰
-            </div>
         </div>
         <div class="kpi-value font-mono">
             <?= htmlspecialchars(FormatHelper::formatCurrency($totalCost), ENT_QUOTES, 'UTF-8') ?>
@@ -54,9 +51,6 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '';
     <div class="kpi-card" style="border-top: 4px solid #0284c7;">
         <div class="kpi-card-header">
             <span class="kpi-label">Gastos com Combustível</span>
-            <div class="kpi-icon-box" style="background-color: #e0f2fe; color: #0284c7;">
-                ⛽
-            </div>
         </div>
         <div class="kpi-value font-mono">
             <?= htmlspecialchars(FormatHelper::formatCurrency($totalFuelCost), ENT_QUOTES, 'UTF-8') ?>
@@ -70,9 +64,6 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '';
     <div class="kpi-card" style="border-top: 4px solid #8b5cf6;">
         <div class="kpi-card-header">
             <span class="kpi-label">KM Rodado no Mês</span>
-            <div class="kpi-icon-box" style="background-color: #f3e8ff; color: #8b5cf6;">
-                🛣️
-            </div>
         </div>
         <div class="kpi-value font-mono">
             <?= number_format($totalKmMonth, 0, ',', '.') ?> <span style="font-size: 1rem; font-weight: 600;">KM</span>

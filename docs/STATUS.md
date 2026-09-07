@@ -1,8 +1,8 @@
 # Estado do Projeto - SisFrota Municipal
 
 **Última atualização:** 06/09/2026  
-**Fase Atual:** Fase 8 Concluída  
-**Próxima Fase:** Fase 9 - Módulo de Relatórios e Exportações (CSV e PDF)  
+**Fase Atual:** Fase 9 Concluída  
+**Próxima Fase:** Fase 10 - Auditoria, Logs de Sistema, Segurança e Ajustes Finais  
 
 ---
 
@@ -87,11 +87,14 @@
   - [x] Adicionar estilos responsivos e temas visuais do `docs/DESIGN.md` no `assets/css/custom.css`.
   - [x] Executar testes automatizados via CLI em `tests/test_fase8.php` (18/18 testes aprovados).
 
-- [ ] **Fase 9 - Módulo de Relatórios e Exportações (CSV e PDF)**
-  - [ ] Integrar biblioteca FPDF localmente.
-  - [ ] Filtros por tipo de registro, intervalo de datas e secretaria.
-  - [ ] Exportação em CSV com UTF-8 BOM.
-  - [ ] Exportação em PDF formatado com brasão da Prefeitura.
+- [x] **Fase 9 - Módulo de Relatórios e Exportações (CSV e PDF)**
+  - [x] Integrar a biblioteca FPDF 1.86 local compatível com PHP 8.x (`app/helpers/fpdf/fpdf.php`).
+  - [x] Criar a classe `ReportPdfHelper.php` com cabeçalho institucional oficial (Brasão de Crateús, cores `#16a34a`, tabelas estilizadas, rodapé e paginação).
+  - [x] Adicionar suporte a filtro de secretaria (`secretariat_id`) nos models `Fueling.php` e `Maintenance.php`.
+  - [x] Implementar `ReportController.php` com ações de visualização (`index`), download de planilha CSV com UTF-8 BOM (`exportCsv`) e documento PDF oficial (`exportPdf`).
+  - [x] Criar View `app/views/reports/index.php` com formulário de filtros dinâmicos, cards de resumo e tabelas de alta densidade para Abastecimentos, Manutenções e Consolidado.
+  - [x] Atualizar roteamento central em `index.php` para as rotas `/reports`, `/reports/csv` e `/reports/pdf` com proteção RBAC (ADMIN e MANAGER).
+  - [x] Executar testes automatizados via CLI em `tests/test_fase9.php` (7/7 testes aprovados).
 
 - [ ] **Fase 10 - Auditoria, Logs de Sistema, Segurança e Ajustes Finais**
   - [ ] Model `SystemLog.php` com fallback para `logs/system_error.log`.
@@ -102,4 +105,4 @@
 
 ## Próximo Passo Recomendado
 
-Abrir um novo chat para iniciar a **Fase 9 - Módulo de Relatórios e Exportações (CSV e PDF)**, integrando a biblioteca FPDF local, criando o `ReportController.php`, a View `app/views/reports/index.php` com filtros por tipo de relatório, datas e secretarias, e os mecanismos de exportação em planilha CSV (UTF-8 BOM) e documento PDF oficial com cabeçalho da Prefeitura de Crateús.
+Abrir um novo chat para iniciar a **Fase 10 - Auditoria, Logs de Sistema, Segurança e Ajustes Finais**, implementando o Model `SystemLog.php` com mecanismo de contingência em arquivo em caso de falha de conexão MySQL, registrando logs de auditoria de segurança (tentativas de login, alterações administrativas, violações de KM), revisando sanitização global XSS/CSRF e executando a checagem final de 100% dos critérios de aceitação do `docs/FSD.md`.

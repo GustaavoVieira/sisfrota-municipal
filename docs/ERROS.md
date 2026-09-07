@@ -26,10 +26,10 @@ Este arquivo é destinado a registrar falhas técnicas, bugs de execução e com
 - **Solução aplicada:** Removido o encapsulamento de transação explícita (`$pdo->beginTransaction()`) no executor de migrations DDL `database/migrate.php`. O controle de idempotência e ordenação passa pela verificação individual de cada arquivo na tabela `migrations`.
 - **Como evitar no futuro:** Nunca envolver instruções DDL do MySQL dentro de transações manuais do PDO.
 
-## 02/09/2026 - PDOException: Invalid parameter number com placeholder :search duplicado
+## 06/09/2026 - Undefined array key "n" em _putimages do FPDF ao referenciar array por valor
 
-- **Sintoma:** Ao executar `$maintModel->findAll(['search' => 'OS-TEST-701'])` no teste da Fase 7, ocorreu `PDOException: SQLSTATE[HY093]: Invalid parameter number` na linha de `execute()` do `Maintenance::findAll()`.
-- **Causa:** O driver PDO do MySQL não aceita o mesmo named placeholder (`:search`) mais de uma vez na mesma instrução SQL preparada. O código usava `LOWER(v.plate) LIKE :search OR LOWER(v.model) LIKE :search OR ...` com o mesmo placeholder repetido 4 vezes.
-- **Solução aplicada:** Substituídos os quatro usos de `:search` por quatro placeholders únicos (`:search1`, `:search2`, `:search3`, `:search4`) e adicionados todos ao array `$params`.
-- **Como evitar no futuro:** Ao construir cláusulas `LIKE` ou `IN` com múltiplas colunas no PDO com MySQL, usar sempre placeholders com nomes distintos ou utilizar `PDO::ATTR_EMULATE_PREPARES = true` (menos seguro).
+- **Sintoma:** Ao compilar um relatório PDF contendo o logo da prefeitura, o PHP 8.x disparou o warning: `Undefined array key "n" in fpdf.php on line 1300`.
+- **Causa:** O método `_putimages()` iterava sobre `$this->images` usando `foreach ($this->images as $file => $info)`. A função `_putimage(&$info)` atribuía `$info['n'] = $this->n;` apenas na variável temporária por valor, não persistindo a chave `'n'` no array `$this->images`, gerando falha no momento de registrar o `/XObject` no dicionário de recursos.
+- **Solução aplicada:** Alterado o loop para utilizar passagem por referência explícita: `foreach ($this->images as $file => &$info)` com posterior `unset($info)`.
+- **Como evitar no futuro:** Sempre utilizar referência ao iterar coleções em que métodos internos modificam as propriedades dos elementos contidos.
 
