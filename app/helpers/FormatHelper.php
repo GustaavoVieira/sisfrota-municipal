@@ -94,6 +94,29 @@ class FormatHelper
     }
 
     /**
+     * Formata data e hora no padrão brasileiro (DD/MM/AAAA HH:MM).
+     */
+    public static function formatDateTime(?string $dateTime): string
+    {
+        if (empty($dateTime)) {
+            return '-';
+        }
+        $timestamp = strtotime($dateTime);
+        if ($timestamp === false) {
+            return $dateTime;
+        }
+        return date('d/m/Y H:i', $timestamp);
+    }
+
+    /**
+     * Alias de formatCurrency para compatibilidade.
+     */
+    public static function formatMoney(float|int|string|null $value): string
+    {
+        return self::formatCurrency($value);
+    }
+
+    /**
      * Retorna o nome do mês e ano em português (ex: "Setembro de 2026").
      */
     public static function formatMonthName(?string $yearMonth): string

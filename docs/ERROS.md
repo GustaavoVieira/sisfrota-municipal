@@ -33,3 +33,10 @@ Este arquivo é destinado a registrar falhas técnicas, bugs de execução e com
 - **Solução aplicada:** Alterado o loop para utilizar passagem por referência explícita: `foreach ($this->images as $file => &$info)` com posterior `unset($info)`.
 - **Como evitar no futuro:** Sempre utilizar referência ao iterar coleções em que métodos internos modificam as propriedades dos elementos contidos.
 
+## 06/09/2026 - Call to undefined method FormatHelper::formatDateTime() e formatMoney()
+
+- **Sintoma:** Nas páginas de listagem de abastecimentos (`/fuelings`), manutenções (`/maintenances`), dashboard (`/dashboard`) e exportações de relatórios (`/reports/pdf` e `/reports/csv`), ocorria a tela de "Falha Técnica" com log `Call to undefined method FormatHelper::formatDateTime()` ou `FormatHelper::formatMoney()`.
+- **Causa:** O helper `FormatHelper.php` possuía apenas `formatDate()` e `formatCurrency()`, enquanto diversas views e controllers utilizavam `formatDateTime()` para exibição de data e hora (DD/MM/AAAA HH:MM) e `formatMoney()` como alias de formatação de moeda.
+- **Solução aplicada:** Implementados os métodos estáticos `FormatHelper::formatDateTime(?string $dateTime): string` e `FormatHelper::formatMoney(float|int|string|null $value): string` retornando as formatações corretas com fallback para valores nulos.
+- **Como evitar no futuro:** Verificar se todos os métodos utilitários invocados pelas views e controladores existem na classe helper correspondente.
+
