@@ -36,7 +36,9 @@ backup/
 backups/
 
 # Pastas de Dependências e Builds Futuros (se houver)
-vendor/
+/vendor/
 node_modules/
 dist/
 build/
+!assets/js/vendor/
+

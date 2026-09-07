@@ -73,6 +73,10 @@ class Maintenance
 
         $sql .= " ORDER BY m.service_date DESC, m.id DESC";
 
+        if (!empty($filters['limit'])) {
+            $sql .= " LIMIT " . (int) $filters['limit'];
+        }
+
         $stmt = $this->db->prepare($sql);
         foreach ($params as $key => $val) {
             if (is_int($val)) {

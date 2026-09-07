@@ -1,8 +1,8 @@
 # Estado do Projeto - SisFrota Municipal
 
-**Última atualização:** 02/09/2026  
-**Fase Atual:** Fase 7 Concluída  
-**Próxima Fase:** Fase 8 - Dashboard Gerencial e Indicadores  
+**Última atualização:** 06/09/2026  
+**Fase Atual:** Fase 8 Concluída  
+**Próxima Fase:** Fase 9 - Módulo de Relatórios e Exportações (CSV e PDF)  
 
 ---
 
@@ -24,14 +24,12 @@
   - [x] Primeiro commit ("Estrutura inicial do projeto") realizado com sucesso.
   - [x] Configuração do repositório remoto no GitHub e sincronização realizada.
 
-
 - [x] **Fase 2 - Banco de Dados, Persistência e Migrations**
   - [x] Criar classe singleton PDO `app/models/Database.php`.
   - [x] Criar executor CLI de migrations `database/migrate.php` protegido por `SYS_ENTRY`.
   - [x] Criar migration `001_create_system_tables.sql` (tabelas: `migrations`, `users`, `secretariats`, `vehicles`, `maintenance_categories`, `fuelings`, `maintenances`, `system_logs`).
   - [x] Criar migration `002_seed_initial_data.sql` (admin inicial, secretarias e categorias).
   - [x] Validar execução e idempotência do script CLI.
-
 
 - [x] **Fase 3 - Autenticação, Sessão e Controle de Acesso (RBAC)**
   - [x] Criar Model `User.php` e `AuthController.php`.
@@ -80,14 +78,20 @@
   - [x] Atualizar `sidebar.php` para exibir "Manutenções" para perfis `ADMIN`, `OPERATOR` e `MANAGER`.
   - [x] Executar testes automatizados via CLI em `tests/test_fase7.php` (13/13 testes aprovados).
 
-- [ ] **Fase 8 - Dashboard Gerencial e Indicadores**
-  - [ ] Criar `DashboardController.php` com métricas consolidadas.
-  - [ ] Renderização de gráficos com Chart.js local.
+- [x] **Fase 8 - Dashboard Gerencial e Indicadores**
+  - [x] Integrar a biblioteca Chart.js local minificada (`assets/js/vendor/chart.min.js`) para execução 100% offline.
+  - [x] Adicionar helpers de meses em português no `FormatHelper.php` (`formatMonthName`, `getMonthShortName`).
+  - [x] Adicionar suporte ao parâmetro `limit` nos métodos `findAll()` de `Fueling.php` e `Maintenance.php`.
+  - [x] Implementar `DashboardController.php` completo com agregação das 4 métricas do mês (Gasto Total, Gastos com Combustível, KM Rodado e Veículos Indisponíveis), histórico de 6 meses e proporção de manutenções.
+  - [x] Criar a View `app/views/dashboard/index.php` com seletor de mês de referência, 4 KPI cards, 2 gráficos Chart.js (Evolução de Custos e Situação das Manutenções) e tabelas de atividades recentes.
+  - [x] Adicionar estilos responsivos e temas visuais do `docs/DESIGN.md` no `assets/css/custom.css`.
+  - [x] Executar testes automatizados via CLI em `tests/test_fase8.php` (18/18 testes aprovados).
 
 - [ ] **Fase 9 - Módulo de Relatórios e Exportações (CSV e PDF)**
+  - [ ] Integrar biblioteca FPDF localmente.
   - [ ] Filtros por tipo de registro, intervalo de datas e secretaria.
   - [ ] Exportação em CSV com UTF-8 BOM.
-  - [ ] Exportação em PDF com biblioteca FPDF local.
+  - [ ] Exportação em PDF formatado com brasão da Prefeitura.
 
 - [ ] **Fase 10 - Auditoria, Logs de Sistema, Segurança e Ajustes Finais**
   - [ ] Model `SystemLog.php` com fallback para `logs/system_error.log`.
@@ -98,4 +102,4 @@
 
 ## Próximo Passo Recomendado
 
-Abrir um novo chat para iniciar a **Fase 8 - Dashboard Gerencial e Indicadores**, criando o `DashboardController.php` com consultas agregadas das 4 métricas do mês (Gasto Total, Combustível, KM Rodado, Veículos Indisponíveis), integrando o Chart.js local para os gráficos de evolução de gastos e proporção de manutenções, e desenvolvendo a View `app/views/dashboard/index.php` com seletor de mês/ano de referência.
+Abrir um novo chat para iniciar a **Fase 9 - Módulo de Relatórios e Exportações (CSV e PDF)**, integrando a biblioteca FPDF local, criando o `ReportController.php`, a View `app/views/reports/index.php` com filtros por tipo de relatório, datas e secretarias, e os mecanismos de exportação em planilha CSV (UTF-8 BOM) e documento PDF oficial com cabeçalho da Prefeitura de Crateús.

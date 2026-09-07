@@ -94,17 +94,40 @@ class FormatHelper
     }
 
     /**
-     * Formata data e hora (AAAA-MM-DD HH:MM:SS) para o padrão brasileiro (DD/MM/AAAA HH:MM).
+     * Retorna o nome do mês e ano em português (ex: "Setembro de 2026").
      */
-    public static function formatDateTime(?string $datetime): string
+    public static function formatMonthName(?string $yearMonth): string
     {
-        if (empty($datetime)) {
-            return '-';
+        if (empty($yearMonth) || !preg_match('/^(\d{4})-(\d{2})$/', $yearMonth, $m)) {
+            return $yearMonth ?? '';
         }
-        $timestamp = strtotime($datetime);
-        if ($timestamp === false) {
-            return $datetime;
-        }
-        return date('d/m/Y H:i', $timestamp);
+
+        $meses = [
+            '01' => 'Janeiro', '02' => 'Fevereiro', '03' => 'Março',
+            '04' => 'Abril',   '05' => 'Maio',      '06' => 'Junho',
+            '07' => 'Julho',   '08' => 'Agosto',    '09' => 'Setembro',
+            '10' => 'Outubro', '11' => 'Novembro',  '12' => 'Dezembro'
+        ];
+
+        $ano = $m[1];
+        $mes = $m[2];
+
+        return ($meses[$mes] ?? $mes) . ' de ' . $ano;
+    }
+
+    /**
+     * Retorna o nome abreviado do mês em português (ex: "Set").
+     */
+    public static function getMonthShortName(string|int $month): string
+    {
+        $m = str_pad((string) (int) $month, 2, '0', STR_PAD_LEFT);
+        $short = [
+            '01' => 'Jan', '02' => 'Fev', '03' => 'Mar',
+            '04' => 'Abr', '05' => 'Mai', '06' => 'Jun',
+            '07' => 'Jul', '08' => 'Ago', '09' => 'Set',
+            '10' => 'Out', '11' => 'Nov', '12' => 'Dez'
+        ];
+        return $short[$m] ?? $m;
     }
 }
+

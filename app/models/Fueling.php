@@ -63,6 +63,10 @@ class Fueling
 
         $sql .= " ORDER BY f.fueling_date DESC, f.id DESC";
 
+        if (!empty($filters['limit'])) {
+            $sql .= " LIMIT " . (int) $filters['limit'];
+        }
+
         $stmt = $this->db->prepare($sql);
         foreach ($params as $key => $val) {
             if (is_int($val)) {
