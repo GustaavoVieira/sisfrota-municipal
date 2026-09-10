@@ -89,7 +89,7 @@ class ReportController
         if ($type === 'fuelings') {
             // Cabeçalho CSV
             fputcsv($out, [
-                'Data/Hora',
+                'Data',
                 'Placa',
                 'Modelo',
                 'Secretaria',
@@ -115,7 +115,7 @@ class ReportController
                 $avgKml = ($row['avg_kml'] !== null && $row['avg_kml'] !== '') ? number_format((float)$row['avg_kml'], 2, ',', '.') : '-';
 
                 fputcsv($out, [
-                    FormatHelper::formatDateTime($row['fueling_date']),
+                    FormatHelper::formatDate($row['fueling_date']),
                     FormatHelper::formatPlate($row['vehicle_plate'] ?? ''),
                     $row['vehicle_model'] ?? '',
                     $row['secretariat_name'] ?? 'Não vinculada',
@@ -229,12 +229,12 @@ class ReportController
         $subtitleText = implode('  |  ', $subtitles);
 
         if ($type === 'fuelings') {
-            $pdf = new ReportPdfHelper('L', 'Relatório Oficial de Abastecimentos de Combustível', $subtitleText, $user);
+            $pdf = new ReportPdfHelper('P', 'Relatório Oficial de Abastecimentos de Combustível', $subtitleText, $user);
             $pdf->AddPage();
 
-            $columns = ['Data/Hora', 'Placa', 'Modelo', 'Secretaria', 'KM', 'Litros', 'Total R$', 'R$/L', 'Combustível', 'Posto', 'KM/L'];
-            $widths  = [26, 20, 32, 42, 18, 16, 22, 16, 22, 44, 19];
-            $aligns  = ['C', 'C', 'L', 'L', 'R', 'R', 'R', 'R', 'C', 'L', 'R'];
+            $columns = ['Data', 'Placa', 'Modelo', 'Secretaria', 'KM', 'Litros', 'Total R$', 'R$/L', 'Combustível', 'Posto', 'KM/L'];
+            $widths  = [15, 15, 18, 30, 12, 12, 20, 12, 20, 25, 12]; // Aumentado para melhor visualização (total ~188mm)
+            $aligns  = ['C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C'];
 
             $pdf->renderTableHeader($columns, $widths, $aligns);
 
@@ -257,10 +257,10 @@ class ReportController
                 $totCost   += (float)$row['total_price'];
 
                 $pdf->renderTableRow([
-                    FormatHelper::formatDateTime($row['fueling_date']),
+                    FormatHelper::formatDate($row['fueling_date']),
                     FormatHelper::formatPlate($row['vehicle_plate'] ?? ''),
                     $row['vehicle_model'] ?? '',
-                    $row['secretariat_name'] ?? 'Não vinculada',
+                    $row['secretariat_acronym'] ?? $row['secretariat_name'] ?? 'Não vinculada',
                     number_format((int)$row['km'], 0, '', '.'),
                     number_format((float)$row['liters'], 2, ',', '.'),
                     FormatHelper::formatCurrency($row['total_price']),
@@ -271,29 +271,29 @@ class ReportController
                 ], $widths, $aligns, $idx % 2 === 1);
             }
 
-            // Sumário
-            $pdf->renderTableSummary([
-                'TOTAL CONSOLIDADO',
-                '',
-                '',
+            // Espaço antes da tabela de totais
+            $pdf->Ln(5);
+
+            // Tabela de Totais (Quantidade, Total de Litros, Total gasto)
+            $totalColumns = ['Quantidade', 'Total de Litros', 'Total gasto'];
+            $totalWidths  = [45, 45, 45]; // largura ajustada para caber na página
+            $totalAligns  = ['C', 'R', 'R'];
+            $pdf->renderTableHeader($totalColumns, $totalWidths, $totalAligns);
+            $pdf->renderTableRow([
                 count($reportData) . ' abastecimentos',
-                '',
                 number_format($totLiters, 2, ',', '.') . ' L',
-                FormatHelper::formatCurrency($totCost),
-                '',
-                '',
-                '',
-                ''
-            ], $widths, $aligns);
+                FormatHelper::formatCurrency($totCost)
+            ], $totalWidths, $totalAligns);
 
         } elseif ($type === 'maintenances') {
-            $pdf = new ReportPdfHelper('L', 'Relatório Oficial de Manutenções e Serviços Mecânicos', $subtitleText, $user);
+            // Inicia PDF para Manutenções
+            $pdf = new ReportPdfHelper('P', 'Relatório Oficial de Manutenções e Serviços Mecânicos', $subtitleText, $user);
             $pdf->AddPage();
 
-            $columns = ['Data', 'Placa', 'Modelo', 'Secretaria', 'Categoria', 'Oficina', 'Nº OS', 'Valor Total', 'Status'];
-            $widths  = [22, 22, 38, 45, 38, 45, 24, 25, 20];
-            $aligns  = ['C', 'C', 'L', 'L', 'L', 'L', 'C', 'R', 'C'];
-
+            // Tabela de Manutenções com colunas ampliadas
+            $columns = ['Data', 'Placa', 'Modelo', 'Secretaria', 'Categoria', 'Oficina Contratada', 'Nº OS', 'Valor Total', 'Status'];
+            $widths  = [18, 18, 18, 33, 22, 33, 22, 20, 15]; // total ~188mm
+            $aligns  = ['C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C'];
             $pdf->renderTableHeader($columns, $widths, $aligns);
 
             $statusLabels = [
@@ -304,14 +304,13 @@ class ReportController
             ];
 
             $totCost = 0.0;
-
             foreach ($reportData as $idx => $row) {
                 $totCost += (float)$row['cost'];
                 $pdf->renderTableRow([
                     FormatHelper::formatDate($row['service_date']),
                     FormatHelper::formatPlate($row['vehicle_plate'] ?? ''),
                     $row['vehicle_model'] ?? '',
-                    $row['secretariat_name'] ?? 'Não vinculada',
+                    $row['secretariat_acronym'] ?? $row['secretariat_name'] ?? 'Não vinculada',
                     $row['category_name'] ?? 'Geral',
                     $row['workshop_name'] ?? '',
                     $row['os_number'] ?? '',
@@ -320,26 +319,28 @@ class ReportController
                 ], $widths, $aligns, $idx % 2 === 1);
             }
 
-            // Sumário
-            $pdf->renderTableSummary([
-                'TOTAL CONSOLIDADO',
-                '',
-                '',
-                count($reportData) . ' ordens de serviço',
-                '',
-                '',
-                '',
-                FormatHelper::formatCurrency($totCost),
-                ''
-            ], $widths, $aligns);
+            // Espaço antes da tabela de totais
+            $pdf->Ln(5);
+
+            // Tabela de Totais (Quantidade, Total de Litros, Total gasto)
+            $totalColumns = ['Quantidade', 'Total de Litros', 'Total gasto'];
+            $totalWidths  = [45, 45, 45];
+            $totalAligns  = ['C', 'R', 'R'];
+            $pdf->renderTableHeader($totalColumns, $totalWidths, $totalAligns);
+            $pdf->renderTableRow([
+                count($reportData) . ' manutenções',
+                '-',
+                FormatHelper::formatCurrency($totCost)
+            ], $totalWidths, $totalAligns);
+
 
         } elseif ($type === 'consolidated') {
-            $pdf = new ReportPdfHelper('L', 'Relatório Consolidado de Gastos e Rodagem por Veículo', $subtitleText, $user);
+            $pdf = new ReportPdfHelper('P', 'Relatório Consolidado de Gastos e Rodagem por Veículo', $subtitleText, $user);
             $pdf->AddPage();
 
-            $columns = ['Placa', 'Modelo', 'Secretaria', 'KM Rodada no Período', 'Litros Consumidos', 'Total Combustível', 'Total Manutenção', 'Custo Total Geral'];
-            $widths  = [24, 45, 55, 34, 32, 33, 30, 26];
-            $aligns  = ['C', 'L', 'L', 'R', 'R', 'R', 'R', 'R'];
+            $columns = ['Placa', 'Modelo', 'Secretaria', 'KM Rodado', 'Litros Consumidos', 'Total Combustível', 'Total Manutenção', 'Custo Total'];
+            $widths  = [18, 18, 35, 20, 25, 25, 25, 24]; // Ajustado para caber em A4 portrait
+            $aligns  = ['C', 'C', 'C', 'C', 'C', 'C', 'C', 'C'];
 
             $pdf->renderTableHeader($columns, $widths, $aligns);
 
@@ -359,7 +360,7 @@ class ReportController
                 $pdf->renderTableRow([
                     FormatHelper::formatPlate($row['plate'] ?? ''),
                     $row['model'] ?? '',
-                    $row['secretariat_name'] ?? 'Não vinculada',
+                    $row['secretariat_acronym'] ?? $row['secretariat_name'] ?? 'Não vinculada',
                     number_format((int)$row['km_traveled'], 0, '', '.') . ' KM',
                     number_format((float)$row['total_liters'], 2, ',', '.') . ' L',
                     FormatHelper::formatCurrency($row['fuel_cost']),
@@ -368,17 +369,19 @@ class ReportController
                 ], $widths, $aligns, $idx % 2 === 1);
             }
 
-            // Sumário
-            $pdf->renderTableSummary([
-                'TOTAL GERAL',
-                '',
+            // Espaço antes da tabela de totais
+            $pdf->Ln(5);
+
+            // Tabela de Totais (Quantidade, Total de Litros, Total gasto)
+            $totalColumns = ['Quantidade', 'Total de Litros', 'Total gasto'];
+            $totalWidths  = [45, 45, 45];
+            $totalAligns  = ['C', 'R', 'R'];
+            $pdf->renderTableHeader($totalColumns, $totalWidths, $totalAligns);
+            $pdf->renderTableRow([
                 count($reportData) . ' veículos avaliados',
-                number_format($totKm, 0, '', '.') . ' KM',
                 number_format($totLiters, 2, ',', '.') . ' L',
-                FormatHelper::formatCurrency($totFuel),
-                FormatHelper::formatCurrency($totMaint),
                 FormatHelper::formatCurrency($totGlobal)
-            ], $widths, $aligns);
+            ], $totalWidths, $totalAligns);
         }
 
         $dateStr = date('Ymd_His');
