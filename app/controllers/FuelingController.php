@@ -159,6 +159,7 @@ SystemLog::log(SystemLog::LEVEL_ERROR, "Falha ao cadastrar abastecimento: {$resu
                 header('Location: ' . BASE_URL . '/fuelings');
         } else {
             $_SESSION['flash_error'] = $result['message'];
+SystemLog::log(SystemLog::LEVEL_ERROR, "Falha ao atualizar abastecimento: {$result['message']}", (int) $user['id']);
             header('Location: ' . BASE_URL . '/fuelings/edit/' . $id);
         }
         exit;
@@ -187,8 +188,10 @@ SystemLog::log(SystemLog::LEVEL_ERROR, "Falha ao cadastrar abastecimento: {$resu
 
         if ($result['success']) {
             $_SESSION['flash_success'] = $result['message'];
+SystemLog::log(SystemLog::LEVEL_INFO, "Abastecimento excluído", (int) $user['id']);
         } else {
             $_SESSION['flash_error'] = $result['message'];
+SystemLog::log(SystemLog::LEVEL_ERROR, "Falha ao excluir abastecimento: {$result['message']}", (int) $user['id']);
         }
 
         header('Location: ' . BASE_URL . '/fuelings');

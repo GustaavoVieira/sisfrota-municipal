@@ -10,6 +10,7 @@ require_once __DIR__ . '/../models/MaintenanceCategory.php';
 require_once __DIR__ . '/../models/Vehicle.php';
 require_once __DIR__ . '/../helpers/AuthHelper.php';
 require_once __DIR__ . '/../helpers/FormatHelper.php';
+require_once __DIR__ . '/../models/SystemLog.php';
 
 class MaintenanceController
 {
@@ -96,9 +97,11 @@ class MaintenanceController
         if ($result['success']) {
             unset($_SESSION['form_data']);
             $_SESSION['flash_success'] = $result['message'];
+SystemLog::log(SystemLog::LEVEL_INFO, "Manutenção cadastrada", (int) $user['id']);
             header('Location: ' . BASE_URL . '/maintenances');
         } else {
             $_SESSION['flash_error'] = $result['message'];
+SystemLog::log(SystemLog::LEVEL_ERROR, "Falha ao cadastrar manutenção: {$result['message']}", (int) $user['id']);
             $_SESSION['form_data']   = $_POST;
 
             $redirectUrl = BASE_URL . '/maintenances/new';
@@ -158,9 +161,11 @@ class MaintenanceController
 
         if ($result['success']) {
             $_SESSION['flash_success'] = $result['message'];
+SystemLog::log(SystemLog::LEVEL_INFO, "Manutenção atualizada", (int) $user['id']);
             header('Location: ' . BASE_URL . '/maintenances');
         } else {
             $_SESSION['flash_error'] = $result['message'];
+SystemLog::log(SystemLog::LEVEL_ERROR, "Falha ao atualizar manutenção: {$result['message']}", (int) $user['id']);
             header('Location: ' . BASE_URL . '/maintenances/edit/' . $id);
         }
         exit;
@@ -189,8 +194,10 @@ class MaintenanceController
 
         if ($result['success']) {
             $_SESSION['flash_success'] = $result['message'];
+SystemLog::log(SystemLog::LEVEL_INFO, "Manutenção excluída", (int) $user['id']);
         } else {
             $_SESSION['flash_error'] = $result['message'];
+SystemLog::log(SystemLog::LEVEL_ERROR, "Falha ao excluir manutenção: {$result['message']}", (int) $user['id']);
         }
 
         header('Location: ' . BASE_URL . '/maintenances');

@@ -5,7 +5,8 @@
 
 defined('SYS_ENTRY') or die('Acesso direto negado.');
 
-require_once APP_PATH . '/helpers/AuthHelper.php';
+require_once __DIR__ . '/../helpers/AuthHelper.php';
+require_once __DIR__ . '/../models/SystemLog.php';
 require_once APP_PATH . '/models/User.php';
 
 class UserController
@@ -90,6 +91,7 @@ class UserController
 
         if ($created) {
             $_SESSION['flash_success'] = 'Usuário cadastrado com sucesso!';
+SystemLog::log(SystemLog::LEVEL_INFO, "Usuário cadastrado", (int) $user['id'] ?? null);
         } else {
             $_SESSION['flash_error'] = 'Erro ao cadastrar o usuário.';
         }
@@ -142,8 +144,10 @@ class UserController
 
         if ($updated) {
             $_SESSION['flash_success'] = 'Dados do usuário atualizados com sucesso!';
+SystemLog::log(SystemLog::LEVEL_INFO, "Usuário atualizado", (int) $user['id'] ?? null);
         } else {
             $_SESSION['flash_error'] = 'Erro ao atualizar o usuário.';
+SystemLog::log(SystemLog::LEVEL_ERROR, "Falha ao atualizar usuário", (int) $user['id'] ?? null);
         }
 
         header('Location: ' . BASE_URL . '/settings/users');
@@ -184,8 +188,10 @@ class UserController
 
         if ($this->userModel->updatePassword($id, $newPassword, $user['id'] ?? null)) {
             $_SESSION['flash_success'] = 'Senha do usuário redefinida com sucesso!';
+SystemLog::log(SystemLog::LEVEL_INFO, "Senha do usuário redefinida", (int) $user['id'] ?? null);
         } else {
             $_SESSION['flash_error'] = 'Erro ao redefinir a senha do usuário.';
+SystemLog::log(SystemLog::LEVEL_ERROR, "Falha ao redefinir senha do usuário", (int) $user['id'] ?? null);
         }
 
         header('Location: ' . BASE_URL . '/settings/users');
@@ -238,8 +244,10 @@ class UserController
 
         if ($this->userModel->delete($id)) {
             $_SESSION['flash_success'] = 'Usuário excluído com sucesso!';
+SystemLog::log(SystemLog::LEVEL_INFO, "Usuário excluído", (int) $user['id']);
         } else {
             $_SESSION['flash_error'] = 'Erro ao excluir o usuário.';
+SystemLog::log(SystemLog::LEVEL_ERROR, "Falha ao excluir usuário", (int) $user['id']);
         }
 
         header('Location: ' . BASE_URL . '/settings/users');

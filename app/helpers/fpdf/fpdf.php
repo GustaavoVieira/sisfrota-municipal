@@ -843,9 +843,7 @@ class FPDF
             $this->CurOrientation = $orientation;
             $this->CurPageSize = $size;
         }
-        if ($orientation !== $this->DefOrientation || $size[0] !== $this->DefPageSize[0] || $size[1] !== $this->DefPageSize[1]) {
-            $this->PageInfo[$this->page]['size'] = [$this->wPt, $this->hPt];
-        }
+        $this->PageInfo[$this->page]['size'] = [$this->wPt, $this->hPt];
         if ($rotation !== 0) {
             if ($rotation % 90 !== 0) {
                 $this->Error('Incorrect rotation value: ' . $rotation);
@@ -1276,7 +1274,9 @@ class FPDF
         }
         $this->_put($kids . ']');
         $this->_put('/Count ' . $nb);
-        $this->_put(sprintf('/MediaBox [0 0 %.2F %.2F]', $this->DefPageSize[0] * $this->k, $this->DefPageSize[1] * $this->k));
+        $wMedia = ($this->DefOrientation === 'P') ? $this->DefPageSize[0] * $this->k : $this->DefPageSize[1] * $this->k;
+        $hMedia = ($this->DefOrientation === 'P') ? $this->DefPageSize[1] * $this->k : $this->DefPageSize[0] * $this->k;
+        $this->_put(sprintf('/MediaBox [0 0 %.2F %.2F]', $wMedia, $hMedia));
         $this->_put('>>');
         $this->_put('endobj');
     }

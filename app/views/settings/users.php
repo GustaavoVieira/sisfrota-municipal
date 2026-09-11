@@ -40,7 +40,6 @@ $roleLabels = [
         <table class="table table-hover mb-0" style="vertical-align: middle;">
             <thead style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
                 <tr>
-                    <th style="padding: 12px 16px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #475569; width: 70px;">ID</th>
                     <th style="padding: 12px 16px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #475569;">Usuário (Login)</th>
                     <th style="padding: 12px 16px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #475569;">Nome Completo</th>
                     <th style="padding: 12px 16px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #475569; width: 140px; text-align: center;">Perfil (RBAC)</th>
@@ -58,9 +57,6 @@ $roleLabels = [
                 <?php else: ?>
                     <?php foreach ($users as $u): ?>
                         <tr style="border-bottom: 1px solid #e2e8f0;">
-                            <td style="padding: 12px 16px; font-family: monospace; font-size: 0.85rem; color: #475569;">
-                                #<?= sprintf('%03d', $u['id']) ?>
-                            </td>
                             <td style="padding: 12px 16px; font-family: monospace; font-weight: 600; color: #16a34a;">
                                 <?= htmlspecialchars($u['username'], ENT_QUOTES, 'UTF-8') ?>
                             </td>

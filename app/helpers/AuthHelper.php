@@ -19,14 +19,14 @@ class AuthHelper
 
             // Configurações de segurança dos cookies de sessão
             ini_set('session.cookie_httponly', '1');
-            ini_set('session.cookie_samesite', 'Lax');
+            ini_set('session.cookie_samesite', 'Strict');
             ini_set('session.use_only_cookies', '1');
             ini_set('session.gc_maxlifetime', (string)$lifetime);
 
             session_set_cookie_params([
                 'lifetime' => $lifetime,
                 'path'     => '/',
-                'secure'   => false, // Em HTTPS em produção pode ser true
+                'secure'   => (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off'), // true somente em HTTPS
                 'httponly' => true,
                 'samesite' => 'Lax'
             ]);

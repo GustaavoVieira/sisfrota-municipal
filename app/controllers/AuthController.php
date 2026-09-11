@@ -7,6 +7,7 @@ defined('SYS_ENTRY') or die('Acesso direto negado.');
 
 require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/../helpers/AuthHelper.php';
+require_once __DIR__ . '/../models/SystemLog.php';
 
 class AuthController
 {
@@ -49,6 +50,7 @@ class AuthController
 
                 if ($user) {
                     AuthHelper::login($user);
+SystemLog::log(SystemLog::LEVEL_INFO, 'Login bem-sucedido', $user['id']);
                     $dashboardUrl = defined('BASE_URL') ? BASE_URL . '/dashboard' : '/dashboard';
                     header("Location: " . $dashboardUrl);
                     exit;
@@ -70,7 +72,9 @@ class AuthController
      */
     public function logout(): void
     {
-        AuthHelper::logout();
+        $user = AuthHelper::user();
+AuthHelper::logout();
+SystemLog::log(SystemLog::LEVEL_INFO, 'Logout realizado', $user['id'] ?? null);
         $loginUrl = defined('BASE_URL') ? BASE_URL . '/login' : '/login';
         header("Location: " . $loginUrl);
         exit;

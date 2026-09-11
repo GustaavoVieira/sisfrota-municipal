@@ -30,6 +30,15 @@ $host    = $_SERVER['HTTP_HOST'] ?? 'localhost';
 $subdir  = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? '/index.php'), '/\\');
 
 define('BASE_URL', $scheme . '://' . $host . $subdir);
+// ─── 5. Cabeçalhos de segurança HTTP (hardening) ────────────────────────────
+header('X-Content-Type-Options: nosniff');               // Impede sniffing de MIME
+header('X-Frame-Options: SAMEORIGIN');                   // Proteção contra clickjacking
+header('Referrer-Policy: no-referrer-when-downgrade');  // Controle de referrer
+header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:;");
+if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+    header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+}
+header('X-XSS-Protection: 1; mode=block'); // Para navegadores legados
 
 // ─── 6. Autoloader simples para models, controllers e helpers ────────────────
 spl_autoload_register(function (string $className): void {

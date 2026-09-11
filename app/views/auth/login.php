@@ -28,6 +28,7 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '';
             margin: 0;
         }
     </style>
+<link rel="icon" type="image/png" href="<?= $baseUrl ?>/docs/logoSF.png">
 </head>
 <body>
     <div class="login-card">

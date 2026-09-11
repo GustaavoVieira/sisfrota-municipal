@@ -34,7 +34,6 @@ defined('SYS_ENTRY') or die('Acesso direto negado.');
         <table class="table table-hover mb-0" style="vertical-align: middle;">
             <thead style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
                 <tr>
-                    <th style="padding: 12px 16px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #475569; width: 80px;">ID</th>
                     <th style="padding: 12px 16px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #475569;">Nome da Secretaria</th>
                     <th style="padding: 12px 16px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #475569; width: 120px;">Sigla</th>
                     <th style="padding: 12px 16px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #475569; width: 160px; text-align: center;">Veículos Vinculados</th>
@@ -51,9 +50,6 @@ defined('SYS_ENTRY') or die('Acesso direto negado.');
                 <?php else: ?>
                     <?php foreach ($secretariats as $sec): ?>
                         <tr style="border-bottom: 1px solid #e2e8f0;">
-                            <td style="padding: 12px 16px; font-family: monospace; font-size: 0.85rem; color: #475569;">
-                                #<?= sprintf('%03d', $sec['id']) ?>
-                            </td>
                             <td style="padding: 12px 16px; font-weight: 600; color: #0f172a;">
                                 <?= htmlspecialchars($sec['name'], ENT_QUOTES, 'UTF-8') ?>
                             </td>

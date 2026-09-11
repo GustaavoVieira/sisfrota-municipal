@@ -18,7 +18,7 @@ class ReportPdfHelper extends FPDF
     private string $emitterRole = 'ADMIN';
     private string $logoPath = '';
 
-    public function __construct(string $orientation = 'P', string $reportTitle = '', string $reportSubtitle = '', ?array $user = null)
+    public function __construct(string $orientation = 'L', string $reportTitle = '', string $reportSubtitle = '', ?array $user = null)
     {
         parent::__construct($orientation, 'mm', 'A4');
 
@@ -32,7 +32,9 @@ class ReportPdfHelper extends FPDF
 
         $this->logoPath = ROOT_PATH . '/assets/img/logo.png';
 
-        $this->SetAutoPageBreak(true, 18);
+        // Margens de 10mm em todas as bordas
+        $this->SetMargins(10, 10, 10);
+        $this->SetAutoPageBreak(true, 14);
         $this->AliasNbPages('{nb}');
         $this->SetTitle($this->reportTitle, true);
         $this->SetAuthor('SisFrota Municipal - Prefeitura de Crateús', true);
@@ -40,10 +42,16 @@ class ReportPdfHelper extends FPDF
     }
 
     /**
-     * Converte strings UTF-8 para ISO-8859-1 (WinAnsi) para compatibilidade com o FPDF.
+     * Converte strings UTF-8 para ISO-8859-1 (WinAnsi) para compatibilidade com o FPDF,
+     * tratando caracteres especiais para evitar pontos de interrogação.
      */
     public function utf8(string $text): string
     {
+        // Substitui bullets, aspas curvas e travessões não mapeados no ISO-8859-1
+        $search  = ['•', '–', '—', '’', '“', '”', '…'];
+        $replace = ['/', '-', '-', "'", '"', '"', '...'];
+        $text    = str_replace($search, $replace, $text);
+
         if (function_exists('mb_convert_encoding')) {
             return mb_convert_encoding($text, 'ISO-8859-1', 'UTF-8');
         }
@@ -54,12 +62,11 @@ class ReportPdfHelper extends FPDF
     }
 
     /**
-     * Cabeçalho institucional oficial de todas as páginas.
+     * Cabeçalho institucional oficial de todas as páginas (inicia no topo da folha).
      */
     public function Header(): void
     {
-        // Posição inicial
-        $this->SetY(8);
+        $this->SetY(5);
         $this->SetX($this->lMargin);
 
         // Largura útil
@@ -67,16 +74,16 @@ class ReportPdfHelper extends FPDF
 
         // Logo oficial da Prefeitura
         if (file_exists($this->logoPath)) {
-            $this->Image($this->logoPath, $this->lMargin, 8, 14, 14);
+            $this->Image($this->logoPath, $this->lMargin, 10, 14, 14);
             $textStartX = $this->lMargin + 18;
-            $textWidth = $pageWidth - 18;
+            $textWidth  = $pageWidth - 18;
         } else {
             $textStartX = $this->lMargin;
-            $textWidth = $pageWidth;
+            $textWidth  = $pageWidth;
         }
 
         // Títulos institucionais
-        $this->SetXY($textStartX, 8);
+        $this->SetXY($textStartX, 10);
         $this->SetFont('Helvetica', 'B', 10);
         $this->SetTextColor(15, 23, 42); // #0f172a Dark Charcoal
         $this->Cell($textWidth, 4.5, $this->utf8('PREFEITURA MUNICIPAL DE CRATEÚS'), 0, 1, 'L');
@@ -84,12 +91,15 @@ class ReportPdfHelper extends FPDF
         $this->SetX($textStartX);
         $this->SetFont('Helvetica', '', 8);
         $this->SetTextColor(71, 85, 105); // #475569 Slate Muted
-        $this->Cell($textWidth, 4, $this->utf8('SisFrota Municipal • Sistema de Gestão de Frota'), 0, 1, 'L');
+        $this->Cell($textWidth, 4, $this->utf8(mb_strtoupper('SisFrota Municipal / Sistema de Gestão de Frota', 'UTF-8')), 0, 1, 'L');
+
+        // Título em maiúsculas usando mb_strtoupper para manter acentuação correta
+        $upperTitle = function_exists('mb_strtoupper') ? mb_strtoupper($this->reportTitle, 'UTF-8') : strtoupper($this->reportTitle);
 
         $this->SetX($textStartX);
         $this->SetFont('Helvetica', 'B', 9);
         $this->SetTextColor(0, 107, 44); // #006b2c Primary Dark
-        $this->Cell($textWidth, 4.5, $this->utf8(strtoupper($this->reportTitle)), 0, 1, 'L');
+        $this->Cell($textWidth, 4.5, $this->utf8($upperTitle), 0, 1, 'L');
 
         // Subtítulo de filtros aplicados
         if (!empty($this->reportSubtitle)) {
@@ -113,30 +123,30 @@ class ReportPdfHelper extends FPDF
      */
     public function Footer(): void
     {
-        $this->SetY(-14);
+        $this->SetY(-13);
 
         // Linha divisória sutil
         $this->SetDrawColor(226, 232, 240); // #e2e8f0
         $this->SetLineWidth(0.3);
         $this->Line($this->lMargin, $this->GetY(), $this->w - $this->rMargin, $this->GetY());
 
-        $this->SetY(-11);
+        $this->SetY(-10);
         $this->SetFont('Helvetica', '', 7.5);
         $this->SetTextColor(100, 116, 139);
 
         // Rótulo do perfil
         $roles = [
-            'ADMIN' => 'Administrador',
-            'MANAGER' => 'Gestor',
+            'ADMIN'    => 'Administrador',
+            'MANAGER'  => 'Gestor',
             'OPERATOR' => 'Operador'
         ];
         $roleLabel = $roles[$this->emitterRole] ?? $this->emitterRole;
 
         $pageWidth = $this->w - $this->lMargin - $this->rMargin;
+        // Footer now shows only the date without time
         $leftText = sprintf(
-            'SisFrota Municipal • Emitido em %s às %s por %s (%s)',
+            'SisFrota Municipal | Emitido em %s por %s (%s)',
             date('d/m/Y'),
-            date('H:i:s'),
             $this->emitterName,
             $roleLabel
         );
@@ -150,7 +160,8 @@ class ReportPdfHelper extends FPDF
      */
     public function renderTableHeader(array $columns, array $widths, array $aligns = []): void
     {
-        $this->SetFont('Helvetica', 'B', 8);
+        // Fonte menor para melhor ajuste em A4
+        $this->SetFont('Helvetica', 'B', 7);
         $this->SetFillColor(22, 163, 74); // #16a34a Municipal Green
         $this->SetTextColor(255, 255, 255);
         $this->SetDrawColor(200, 210, 200);
@@ -159,7 +170,9 @@ class ReportPdfHelper extends FPDF
         foreach ($columns as $idx => $colName) {
             $w = $widths[$idx] ?? 25;
             $align = $aligns[$idx] ?? 'L';
-            $this->Cell($w, 6.5, $this->utf8($colName), 1, 0, $align, true);
+            // Trunca título da coluna para evitar overflow
+            $display = mb_strimwidth($colName, 0, 30, '');
+            $this->Cell($w, 6.5, $this->utf8($display), 1, 0, $align, true);
         }
         $this->Ln();
     }
@@ -169,7 +182,8 @@ class ReportPdfHelper extends FPDF
      */
     public function renderTableRow(array $values, array $widths, array $aligns = [], bool $isEven = false): void
     {
-        $this->SetFont('Helvetica', '', 7.5);
+        // Fonte menor para ajustar melhor em páginas A4
+        $this->SetFont('Helvetica', '', 7);
 
         if ($isEven) {
             $this->SetFillColor(248, 250, 252); // #f8fafc
@@ -184,7 +198,9 @@ class ReportPdfHelper extends FPDF
         foreach ($values as $idx => $val) {
             $w = $widths[$idx] ?? 25;
             $align = $aligns[$idx] ?? 'L';
-            $this->Cell($w, 5.5, $this->utf8((string) $val), 1, 0, $align, true);
+            // Trunca conteúdo para evitar overflow
+            $display = mb_strimwidth((string) $val, 0, 30, '');
+            $this->Cell($w, 5.5, $this->utf8($display), 1, 0, $align, true);
         }
         $this->Ln();
     }
