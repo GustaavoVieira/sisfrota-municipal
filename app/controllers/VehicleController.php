@@ -8,7 +8,9 @@ defined('SYS_ENTRY') or die('Acesso direto negado.');
 require_once __DIR__ . '/../models/Vehicle.php';
 require_once __DIR__ . '/../models/Secretariat.php';
 require_once __DIR__ . '/../helpers/AuthHelper.php';
+require_once __DIR__ . '/../helpers/AuthHelper.php';
 require_once __DIR__ . '/../helpers/FormatHelper.php';
+require_once __DIR__ . '/../models/SystemLog.php';
 
 class VehicleController
 {
@@ -136,7 +138,8 @@ class VehicleController
         if ($vehicleId) {
             unset($_SESSION['form_data']);
             $_SESSION['flash_success'] = 'Veículo ' . FormatHelper::formatPlate($plate) . ' cadastrado com sucesso!';
-            header('Location: ' . BASE_URL . '/vehicles');
+            SystemLog::log(SystemLog::LEVEL_INFO, "Veículo " . FormatHelper::formatPlate($plate) . " cadastrado", (int) $user['id']);
+header('Location: ' . BASE_URL . '/vehicles');
         } else {
             $_SESSION['flash_error'] = 'Erro ao cadastrar o veículo. Tente novamente.';
             $_SESSION['form_data']   = $_POST;
@@ -219,7 +222,8 @@ class VehicleController
 
         if ($this->vehicleModel->update($id, $_POST, (int) $user['id'])) {
             $_SESSION['flash_success'] = 'Dados do veículo ' . FormatHelper::formatPlate($plate) . ' atualizados com sucesso!';
-            header('Location: ' . BASE_URL . '/vehicles');
+            SystemLog::log(SystemLog::LEVEL_INFO, "Veículo " . FormatHelper::formatPlate($plate) . " atualizado", (int) $user['id']);
+header('Location: ' . BASE_URL . '/vehicles');
         } else {
             $_SESSION['flash_error'] = 'Erro ao atualizar o veículo. Tente novamente.';
             header('Location: ' . BASE_URL . '/vehicles/edit/' . $id);
@@ -260,7 +264,8 @@ class VehicleController
             $_SESSION['flash_error'] = 'Erro ao inativar o veículo.';
         }
 
-        header('Location: ' . BASE_URL . '/vehicles');
+        SystemLog::log(SystemLog::LEVEL_INFO, "Veículo " . FormatHelper::formatPlate($vehicle['plate']) . " inativado", (int) $user['id']);
+header('Location: ' . BASE_URL . '/vehicles');
         exit;
     }
 
@@ -290,7 +295,8 @@ class VehicleController
             $_SESSION['flash_error'] = $result['message'];
         }
 
-        header('Location: ' . BASE_URL . '/vehicles');
+        SystemLog::log(SystemLog::LEVEL_INFO, "Veículo ID $id excluído permanentemente", (int) $user['id']);
+header('Location: ' . BASE_URL . '/vehicles');
         exit;
     }
 }
